@@ -3,19 +3,13 @@
  * @return {number}
  */
 var maxSubArray = function(nums) {
-    let left = 0;
-    let windowSum = 0;
-    let maxSum = Number.NEGATIVE_INFINITY;
-    for (let right = 0; right < nums.length; right++){
-        const curr = nums[right];
-        windowSum += curr;
-        maxSum = Math.max(maxSum, windowSum);
-        if (windowSum <0){
-            left = right+1;
-            windowSum = 0;
-        }
-        console.log("left = " + left + " right = " + right )
-        console.log("windowSum = " + windowSum + " maxSum = " + maxSum )
+    let maxSum = nums[0];
+    let windowSum = nums[0];
+    for (let i = 1; i < nums.length; i++){
+        const curr = nums[i];
+        windowSum = Math.max(curr, curr+windowSum);
+        maxSum = Math.max(windowSum, maxSum);      
     }
     return maxSum;
+    
 };
