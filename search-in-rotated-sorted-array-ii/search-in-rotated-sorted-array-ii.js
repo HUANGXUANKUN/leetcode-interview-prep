@@ -5,12 +5,8 @@
  */
 var search = function(nums, target) {
     // trim head == tail
-    while (nums.length >= 2){
-        if (nums[nums.length-1] == nums[0]){
-            nums.pop()
-        }else{
-            break
-        }
+    while (nums.length >= 2 && nums[nums.length-1] == nums[0]){
+        nums.pop()
     }
     
     let left = 0, right = nums.length-1;
@@ -18,7 +14,7 @@ var search = function(nums, target) {
     while (left < right){
         // count++;
         const mid = left + Math.floor(((right-left) /2));
-        console.log("left  " + left + " right = " + right)
+        // console.log("left  " + left + " right = " + right)
         if (target == nums[mid]){
             return true;
         }
