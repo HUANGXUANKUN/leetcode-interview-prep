@@ -4,36 +4,44 @@
  * @return {boolean}
  */
 var search = function(nums, target) {
-    let left = 0, right = nums.length -1;
-    while (left < right){
-        const mid = left + (right-left >> 1);
-        console.log("left = " + left + " right = " + right + " mid " + mid)
-        if (nums[mid] == target){
-            return true;
-        }
-        if (nums[mid] == nums[left]){
-            left++;
-            continue;
-        }
-        // check target position
-        if (target >= nums[left]){ //target at left section
-            console.log("target at left")
-            // left mid target.|.right
-            if(nums[mid] > nums[left] && target > nums[mid]){ // mid at left section
-                left = mid+1;
-            }else{// left mid target.|.right
-                right = mid-1; // left target mid | right
-            }
-        }else{ //target at right section
-            if (nums[mid] < nums[left] && target < nums[mid] ){ //left  |. target  mid right
-                right = mid - 1;
-            }else{
-                left = mid+1;
-            } 
+    // trim head == tail
+    while (nums.length >= 2){
+        if (nums[nums.length-1] == nums[0]){
+            nums.pop()
+        }else{
+            break
         }
     }
-    console.log(left)
     
-    return nums[left] == target;
+    let left = 0, right = nums.length-1;
+    // let count = 0;
+    while (left < right){
+        // count++;
+        const mid = left + Math.floor(((right-left) /2));
+        console.log("left  " + left + " right = " + right)
+        if (target == nums[mid]){
+            return true;
+        }
+        // check if mid in left section
+        if (nums[mid] >= nums[left]){
+            // check if target to the left of mid
+            if (target >= nums[left] && target < nums[mid]){
+                right = mid - 1; // left target mid | right
+            }else{
+                left = mid + 1; // left mid  target right
+            }
+        }
+        // if mid in right section
+        else{
+            // check if target to the right of mid
+            if (target < nums[left] && target > nums[mid]){
+                // left  | mid target right
+                left = mid + 1;
+            }else{
+                right = mid - 1;
+            }
+        }
+    }
     
+    return nums[left] == target
 };
