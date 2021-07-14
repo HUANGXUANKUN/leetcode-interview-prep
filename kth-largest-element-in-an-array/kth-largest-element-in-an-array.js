@@ -13,9 +13,9 @@ var findKthLargest = function(nums, k) {
         // console.log("random pivot = " + randomPivot)
         const partitionPivot = partition(nums, left, right, randomPivot);
         
-        // console.log("parition pivot = " + partitionPivot)
-        // console.log(nums)
-        // console.log("")
+//         console.log("parition pivot = " + partitionPivot)
+//         console.log(nums)
+//         console.log("")
         
         if (partitionPivot == nums.length-k){
             console.log("found1!!!!")
@@ -29,33 +29,28 @@ var findKthLargest = function(nums, k) {
     
     const partition = (nums, left, right, pivot) => {
         const pivotValue = nums[pivot];
-        // console.log("pivot value = " + pivotValue);
+        
         // swap with right
-        [nums[right], nums[pivot]] = [nums[pivot], nums[right]];
+        [nums[right], nums[pivot]] = [nums[pivot], nums[right]]
         let addPivot = left;
         
         // not consider the last element
         for (let i = left; i <= right-1; i++){
-            if (nums[i] < pivotValue){
+            if (nums[i] <= pivotValue){
                 // swap
                 [nums[i], nums[addPivot]] = [nums[addPivot], nums[i]];
-                addPivot +=1;
-                // console.log("num = " + nums[i] + " smaller than, new pivot point " + addPivot)
-            }else{
-                // console.log("num = " + nums[i] + " larger than, new pivot point " + addPivot)
-                
+                addPivot++;
             }
-            
         }
         // swap right with addPivot postition
-        // console.log("after swapping");
-        // console.log(nums);
+        console.log("after swapping");
+        console.log(nums);
         [nums[right], nums[addPivot]] = [nums[addPivot], nums[right]];
         return addPivot;
     }
     const result = quick_select(nums, 0, nums.length-1)
-    console.log(nums)
-    console.log(result)
+    // console.log(nums)
+    // console.log(result)
     return result
     
 };
