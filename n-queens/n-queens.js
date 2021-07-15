@@ -3,48 +3,52 @@
  * @return {string[][]}
  */
 var solveNQueens = function(n) {
-    const solve = (n, row, matrix, result, colSet, diaSet, antiDiaSet) =>{
+    // n-queen
+    
+    const solve = (n, row, colSet, diaSet, antiDiaSet, matrix, result) => {
         // base case
-        // if row >= n, copy result reaching the end
         if (row >= n){
+            // print result
             const temp = [];
-            for(const rowArr of matrix){
-                // convert to string
-                temp.push(rowArr.join(''));
+            for (line of matrix){
+                temp.push(line.join(''));
             }
-            console.log(temp)
             result.push(temp);
         }
         
-        // iterate all cols, check if can place (check colSet, diaSet, antiDiaSet)
-        for (let i = 0; i < n; i++){
-            // check colSet, diagonal and antiDiagonal
-            const diagonal_index = i+row;
-            const anti_diagonal_index = i-row;
-            if (colSet.has(i) || diaSet.has(diagonal_index) || antiDiaSet.has(anti_diagonal_index)){
-                continue;
+        // iterate all columns
+        for (let col = 0; col < n; col++){
+            // check if available
+            const diaIndex = col+row;
+            const antiDiaIndex = col-row;
+            if (colSet.has(col) || diaSet.has(diaIndex) || antiDiaSet.has(antiDiaIndex)){
+                continue; // cannot place
             }
-            else{
-                // can place;
-                colSet.add(i);
-                diaSet.add(diagonal_index);
-                antiDiaSet.add(anti_diagonal_index);
-                matrix[row][i] = 'Q'
-                
-                solve(n, row+1, matrix, result, colSet, diaSet, antiDiaSet);
-                
-                // backtrack
-                matrix[row][i] = '.'
-                colSet.delete(i);
-                diaSet.delete(diagonal_index);
-                antiDiaSet.delete(anti_diagonal_index);
-            }
-        }        
+            
+            // place
+            matrix[row][col] = 'Q'
+            colSet.add(col);
+            diaSet.add(diaIndex);
+            antiDiaSet.add(antiDiaIndex);
+            
+            // dp
+            solve(n, row+1, colSet, diaSet, antiDiaSet, matrix, result);
+            
+            // backtrack
+            matrix[row][col] = '.'
+            colSet.delete(col);
+            diaSet.delete(diaIndex);
+            antiDiaSet.delete(antiDiaIndex);
+        }
     }
     
-    const matrix = Array(n).fill(0).map(()=>Array(n).fill('.'));
     const result = [];
-    const colSet = new Set(), diaSet = new Set(), antiDiaSet = new Set();
-    solve(n, 0, matrix, result, colSet, diaSet, antiDiaSet);
+    const matrix = Array(n).fill(0).map(()=>Array(n).fill('.'))
+    const colSet = new Set(),
+          diaSet = new Set(),
+          antiDiaSet = new Set();
+    solve(n, 0, colSet, diaSet, antiDiaSet, matrix, result);
     return result;
+
+    
 };
