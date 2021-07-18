@@ -3,24 +3,24 @@
  * @return {number}
  */
 var majorityElement = function(nums) {
-    // use counter approach
-    let curr_max_count_num = nums[0]
+    // counter
+    let currNum = nums[0];
     let count = 1;
-    for (let i = 1; i<nums.length; i++){
-        if (curr_max_count_num==nums[i]){
+    for (let i = 1; i < nums.length; i++){
+        const newNum = nums[i];
+        if (newNum == currNum){
             count++;
         }else{
-            if (count > 0){ // if count = 0, switch number
-                count--;
+            // not equal
+            if (count >= 1){
+                count -= 1;
             }else{
-                curr_max_count_num = nums[i];
-                count = 1;               
+                // count == 0, change num
+                currNum = newNum;
+                count = 1;
             }
         }
-        // console.log("currnum = " + curr_max_count_num)
-        // console.log("count = " + count)
-        
     }
-    return curr_max_count_num;
+    return currNum;
     
 };
