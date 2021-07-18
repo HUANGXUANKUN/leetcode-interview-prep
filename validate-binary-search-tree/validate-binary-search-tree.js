@@ -13,11 +13,9 @@
 var isValidBST = function(root) {
     const dfs = (root, low, high) => {
         if (root == null) return true;
-        if (root.val <= low || root.val >= high){
-            return false;
-        }
-        return dfs(root.left, low, root.val) && dfs(root.right, root.val, high)
-        
+        // check if root value is (low, high)
+        if (root.val <= low || root.val >= high) return false;
+        return dfs(root.left, low, root.val) && dfs(root.right, root.val, high);
     }
     return dfs(root, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     
