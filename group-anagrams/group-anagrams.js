@@ -3,27 +3,24 @@
  * @return {string[][]}
  */
 var groupAnagrams = function(strs) {
-    const map = new Map();
-    for (word of strs){
-        const charDict = Array(26).fill(0);
-        // count 
-        for (char of word){
-            // convert 'a' to 0
-            const charIndex = char.charCodeAt() - 'a'.charCodeAt()
-            console.log(char + " " + charIndex);
-            charDict[charIndex] += 1;
+    const dict = new Map();
+    for (const word of strs){
+        const letterArray = Array(26).fill(0);
+        for (const char of word){
+            const letterIndex = char.charCodeAt() - 'a'.charCodeAt();
+            // console.log("char = " + char, " index = " + letterIndex);
+            letterArray[letterIndex] += 1;
         }
-        // convert charDict to string
-        const hashKey = charDict.toString();
-        if(!map.has(hashKey)){
-            map.set(hashKey, [word])
+        // console.log(letterArray)
+        // hashkey
+        const wordKey = letterArray.toString();
+        if (!dict.has(wordKey)){
+            dict.set(wordKey, []);
         }
-        
-        else{
-            map.get(hashKey).push(word);
-        }
+        dict.get(wordKey).push(word);
     }
-    console.log(map);
-    return [...map.values()];
+    // console.log(dict)
+    // return array
+    return [...dict.values()];
     
 };
