@@ -6,35 +6,31 @@
 var addBinary = function(a, b) {
     const n = a.length;
     const m = b.length;
-    const result = [];
+    if (m < n) return addBinary(b, a)
     
-    // reverse a and b
-    let i = n-1;
-    let j = m-1
+    let num1 = a.split('').reverse();
+    let num2 = b.split('').reverse();
+    let result = [];
     let carry = 0;
-    let sum = 0;
-    while (i >= 0 || j >= 0){
-        let valueA = 0, valueB = 0;
-        if (i >= 0){
-            valueA = Number(a[i]);
-            i--;
-        }
-        if (j >= 0){
-            valueB = Number(b[j]);
-            j--;
+    
+    // a.len <= b.len
+    for (let i = 0; i < m; i++){
+        let val1 = 0,
+            val2 = Number(num2[i]);
+        
+        if (i < n){
+            val1 = Number(num1[i]);
         }
         
-        let tempSum = valueA + valueB + carry;
-        if (tempSum >= 2){
+        let tempSum = val1 + val2 + carry;
+        carry = 0;
+        if(tempSum >= 2){
             tempSum %= 2;
             carry = 1;
-        }else{
-            carry = 0;
         }
         result.push(tempSum);
     }
-    if (carry == 1){
-        result.push(1);
-    }
+    
+    if(carry > 0) result.push(1);
     return result.reverse().join('');
 };
