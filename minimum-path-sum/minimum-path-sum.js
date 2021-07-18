@@ -3,38 +3,34 @@
  * @return {number}
  */
 var minPathSum = function(grid) {
-    // move only right and bottom
-    const move = (grid, n, m, i, j, visited) => {     
-        // check if visited with shorter sum
-        if (visited[i][j] != -1){
-            return visited[i][j];
+    const directions = [[0, 1], [1, 0]];
+    const dfs = (grid, i, j, n, m, pathSum, currSum) => {
+        // base case
+        if (i >= n || j >= m){
+            return;
         }
         
-        // reaching the end
-        if (i == n-1 && j == m-1){
-            return grid[i][j]
+        // check if visited
+        if (pathSum[i][j] != -1){
+            // visited, check currSum
+            if (currSum + grid[i][j] >= pathSum[i][j]){ // this is not shorter
+                return;
+            }
         }
+        // not visited, or shorter path
+        pathSum[i][j] = currSum + grid[i][j];
         
-        // this path is shorter
-        let smallestSumFromCell = 0;
-        let rightPathSum = Number.POSITIVE_INFINITY, downPathSum = Number.POSITIVE_INFINITY;
-        
-        // move right
-        if (j+1 < m){
-             rightPathSum = move(grid, n, m, i, j+1, visited)
+        // visit 3 directions other than incoming path
+        for (let [a, b] of directions){
+            dfs(grid, i+a, j+b, n, m, pathSum, pathSum[i][j]);
         }
-        // move bottom
-        if(i+1 < n){
-            downPathSum = move(grid, n, m, i+1, j, visited);
-        }
-        
-        smallestSumFromCell = Math.min(rightPathSum, downPathSum) + grid[i][j]
-        visited[i][j] = smallestSumFromCell;
-        return visited[i][j]
     }
+    
+    // use pathSum[i][j] to record min sum from (0, 0) to (i, j)
     const n = grid.length;
     const m = grid[0].length;
-    const visited = Array(n).fill(-1).map(()=>Array(m).fill(-1))
-    return move(grid, n, m, 0, 0, visited)
+    const pathSum = Array(n).fill(0).map(()=>Array(m).fill(-1)); // init -1
+    dfs(grid, 0, 0, n, m, pathSum, 0);
+    return pathSum[n-1][m-1];
     
 };
