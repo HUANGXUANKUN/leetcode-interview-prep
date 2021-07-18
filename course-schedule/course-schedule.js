@@ -4,51 +4,37 @@
  * @return {boolean}
  */
 var canFinish = function(numCourses, prerequisites) {
-    
-    // topologic
-    const graph = new Map(); // a to [b,c,d,e]
-    const inDegree = new Map(); // a from [b, c, d, e]
-    // init
-    for (let i = 0; i < numCourses; i++){
-        graph.set(i, new Set())
-        inDegree.set(i, new Set())      
-    }
+    // topology
+    // create adjList
+    // create inDegreeCount
+    const adjList = Array(numCourses).fill(0).map(()=>[]);
+    const inDegreeCount = Array(numCourses).fill(0);
     for (let [to, from] of prerequisites){
-        graph.get(from).add(to);
-        inDegree.get(to).add(from);  
+        inDegreeCount[to]+=1;
+        adjList[from].push(to);
     }
-    console.log(graph)
-    console.log(inDegree)
-    // find zero indegree
+    // find the node with zero indegree count
     let queue = [];
-    for (let [key, value] of inDegree.entries()){
-        if (value.size == 0){
-            queue.push(key);
+    for (let i= 0; i < numCourses; i++){
+        if (inDegreeCount[i] == 0){
+            queue.push(i);
         }
     }
-    console.log(queue)
-    const topoResult = [];
+    let topoResultCount = 0;
     while (queue.length > 0){
-        const newQueue = []
+        let newQueue = [];
         for (const from of queue){
-            topoResult.push(from);
-            console.log("from = " + from)
-            // find  children
-            const toSet = graph.get(from);
-            // iterate childrens
-            for (const target of toSet){
-                console.log("target = " + target);
-                // remove indegree
-                inDegree.get(target).delete(from);
-                if (inDegree.get(target).size == 0){
-                    newQueue.push(target);
+            topoResultCount += 1;
+            // check all its destination, remove the edge by reducing indegreecount
+            for (const child of adjList[from]){
+                inDegreeCount[child]-=1;
+                if (inDegreeCount[child] == 0){
+                    newQueue.push(child);
                 }
-                toSet.delete(target);
             }
         }
-            
         queue = newQueue;
     }
-    console.log(topoResult);
-    return topoResult.length == numCourses
+    return topoResultCount == numCourses ? true : false;
+    
 };
