@@ -4,36 +4,28 @@
  * @return {number}
  */
 var uniquePaths = function(n, m) {
-    // dp
-    const move = (n, m, i, j, dp) => {
-        // console.log(i + " " + j)
-        // base case
-        if (i >= n || j>=m){
+    // use path[i][j] to record number of path from (i, j) to (n, m)
+    const dfs = (i, j, n, m, paths) => {
+        // console.log(`i = ${i}, j = ${j}`)
+        if(i == n-1 && j == m-1){
+            // reach target
+            paths[i][j] = 1;
+            return paths[i][j];
+        }
+        // check if out of bounds
+        if (i >= n || j >= m){
             return 0;
         }
-        if(i == n-1 && j == m-1){
-            // console.log("reaching the end")
-            return 1;
-        }
-        //check if visited
+        // check if visited
+        if (paths[i][j] != -1) return paths[i][j];
+        // continue 
         
-        if(dp[i][j] != -1){
-            return dp[i][j];
-        }
-        
-        let pathFromCurrentCell = 0;
-        // move right
-        pathFromCurrentCell += move(n, m, i, j+1, dp)
-        
-        // move down
-        pathFromCurrentCell += move(n, m, i+1, j, dp)
-        dp[i][j] = pathFromCurrentCell;
-        return dp[i][j]       
+        const rightPaths = dfs(i, j+1, n, m, paths);
+        const bottomPaths = dfs(i+1, j, n, m, paths);
+        paths[i][j] = rightPaths + bottomPaths;
+        return paths[i][j];
     }
-    
-    dp = Array(n).fill(-1).map(()=>Array(m).fill(-1)) 
-    // console.log(dp)
-    // dp[i][j] == -1 means not visited
-    return move(n, m, 0, 0, dp);
-    
+    const paths = Array(n).fill(0).map(()=>Array(m).fill(-1));
+    dfs(0, 0, n, m, paths);
+    return paths[0][0];
 };
