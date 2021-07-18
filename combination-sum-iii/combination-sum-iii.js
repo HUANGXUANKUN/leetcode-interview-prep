@@ -4,26 +4,27 @@
  * @return {number[][]}
  */
 var combinationSum3 = function(k, n) {
-    const solve = (k, target, startIndex, currSum, currList, result) => {
+    const solve = (k, n, startNum, sum, currList, result) => {
         // base case
-        // check currList.length 
         if (currList.length == k){
-            if (target == currSum){
+            if (sum == n){
                 result.push([...currList]);
             }
             return;
         }
-        
-        // iterate from startindex
-        for (let i = startIndex; i<=9; i++){
+        if (sum > n || startNum > 9){ // impossible
+            return;
+        }
+        for (let i = startNum; i <= 9; i++){
+            // add the num
             currList.push(i);
-            solve(k, target, i+1, currSum + i, currList, result);
+            solve(k, n, i+1, sum + i, currList, result);
+            // backtrack
             currList.pop();
         }
     }
-    
+    // const numSet = new Set();
     const result = [];
     solve(k, n, 1, 0, [], result);
     return result;
-    
 };
