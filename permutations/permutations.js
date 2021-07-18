@@ -3,28 +3,27 @@
  * @return {number[][]}
  */
 var permute = function(nums) {
-    // backtracking
-    const solve = (nums, result, tempList) => {
-        if (nums.length == tempList.length) {
+    const solve = (nums, addSet, tempList, result) =>{
+        if (tempList.length == nums.length){
             result.push([...tempList]);
-            return;
         }
+        // add remaining
         for (let i = 0; i < nums.length; i++){
-            // check if visited
-            if (nums[i] == Number.POSITIVE_INFINITY){
-                // pass
+            // check if added
+            if (addSet.has(i)){
                 continue;
             }
-            const curr = nums[i];
-            tempList.push(curr);
-            nums[i] = Number.POSITIVE_INFINITY; // mark as added
-            solve(nums, result, tempList)
-            nums[i] = curr; // unmark 
-            tempList.pop(); //backtrack
+            // add
+            tempList.push(nums[i]);
+            addSet.add(i);
+            solve(nums, addSet, tempList, result);
+            addSet.delete(i);
+            tempList.pop();
         }
     }
-    
     const result = [];
-    solve(nums, result, []);
+    const set = new Set();
+    solve(nums, set, [], result);
     return result;
+    
 };
