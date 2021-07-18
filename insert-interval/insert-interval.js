@@ -4,44 +4,36 @@
  * @return {number[][]}
  */
 var insert = function(intervals, newInterval) {
-    const result = []
+    // original interval is not overlapping
     
-    // insert all interval.end < newInterval.start
+    // find all intervals with end < newInterval.start
+    const result = [];
     let i = 0;
-    while (i < intervals.length && newInterval[0] > intervals[i][1]){
-        result.push([intervals[i][0], intervals[i][1]]);
+    while(i < intervals.length && intervals[i][1] < newInterval[0]){
+        // cannot merge
+        console.log("pushing")
+        result.push(intervals[i]);
         i++;
     }
-    
-    // init interval = newInteral
+    console.log(result);
     let oldStart = newInterval[0];
     let oldEnd = newInterval[1];
-        
-    // iterate remaining intervals with merging
-    while (i < intervals.length){
-        const newStart = intervals[i][0]
-        const newEnd = intervals[i][1]
-        // if intersect, merge
-        // old    ----       ----      ------------     ------
-        // new -----            -----    --------     -----------
-        if (oldStart >= newStart || newStart <= oldEnd ){
-            //merge
-            oldStart = Math.min(oldStart, newStart)
+    // merge 
+    for (let j = i; j < intervals.length; j++){
+        const newStart = intervals[j][0],
+              newEnd = intervals[j][1];
+        if (!(newStart > oldEnd)){
+            // merge
+            console.log(",merge")
+            oldStart = Math.min(oldStart, newStart);
             oldEnd = Math.max(oldEnd, newEnd);
-        }
-        // if not intersect, push old into result
-        else{
+        }else{
+            // not overlap
             result.push([oldStart, oldEnd])
             oldStart = newStart;
             oldEnd = newEnd;
         }
-        i++;
     }
-        
-    
-    // push last interval to result
-    result.push([oldStart, oldEnd])
-    
+    result.push([oldStart, oldEnd]) // push the last
     return result;
-    
 };
