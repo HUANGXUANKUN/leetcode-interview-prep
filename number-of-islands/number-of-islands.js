@@ -3,34 +3,27 @@
  * @return {number}
  */
 var numIslands = function(grid) {
-    const dfs = (grid, i, j) => {
-        // base case
-        if(i < 0 || j < 0 || i >= grid.length || j >= grid[0].length){
-            return
+    const bfs = (grid, i, j, n, m) => {
+        // visit all '1', and change it to '0'
+        if (i < 0 || j < 0 || i >= n || j>= m){
+            return; //out of bound
         }
-        
-        if(grid[i][j] == '0'){ // if visited or water
-            return
-        }
-        // mark as visited
-        grid[i][j] = '0' 
-        
-        // visit in 4 direction
-        dfs(grid, i+1, j)
-        dfs(grid, i-1, j)
-        dfs(grid, i, j+1)
-        dfs(grid, i, j-1)
+        if (grid[i][j] == '0') return; // visited
+        grid[i][j] = '0';
+        // visit 4 direction
+        bfs(grid, i+1, j, n, m)
+        bfs(grid, i-1, j, n, m)
+        bfs(grid, i, j+1, n, m)
+        bfs(grid, i, j-1, n, m)
     }
-    const n = grid.length;
-    const m = grid[0].length;
+    const n = grid.length,
+          m = grid[0].length;
     let count = 0;
-    for(let i = 0; i < n; i++){
+    for (let i = 0; i < n; i++){
         for(let j = 0; j < m; j++){
-            // console.log("i = " + i + " j = " + j)
-            // console.log(grid)
-            if(grid[i][j] == '1'){ // not visited
+            if (grid[i][j] == '1'){
                 count+=1;
-                dfs(grid, i, j);
+                bfs(grid, i, j, n, m)
             }
         }
     }
