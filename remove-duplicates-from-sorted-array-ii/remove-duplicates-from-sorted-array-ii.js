@@ -3,19 +3,20 @@
  * @return {number}
  */
 var removeDuplicates = function(nums) {
-    let swapIndex = 2;
-    for (let i = 2; i < nums.length; i++){
-        // compare with number at i-1 and i-2
-        const curr = nums[i]
-        if (curr == nums[swapIndex-1] && curr == nums[swapIndex-2]){
-            // two duplicate alr, skip
-            continue
+    // use pivot to place unique
+    const n = nums.length;
+    if (n <= 2) return;
+    let pivot = 0;
+    
+    for (let i = 0; i < n; i++){
+        // check if duplicated by checking pivot-1 and pivot-2, nums[0...pivot-1] are all non-duplicated
+        if (pivot >= 2 && nums[i] == nums[pivot-1] && nums[i] == nums[pivot-2]){
+            // duplicated
         }else{
-            // swap
-            [nums[i], nums[swapIndex]] = [nums[swapIndex], nums[i]];
-            swapIndex += 1;
+            // not duplicated
+            nums[pivot] = nums[i];
+            pivot++;
         }
     }
-    return swapIndex;
-    
+    return pivot;
 };
