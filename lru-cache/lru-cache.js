@@ -2,8 +2,9 @@
  * @param {number} capacity
  */
 var LRUCache = function(capacity) {
+    // use map to maintain structure
     this.capacity = capacity;
-    this.map = new Map(); // use map insert order to track LRU
+    this.map = new Map();
     
 };
 
@@ -12,16 +13,15 @@ var LRUCache = function(capacity) {
  * @return {number}
  */
 LRUCache.prototype.get = function(key) {
-    // console.log("getting " + key)
-    
-    if (this.map.has(key)){
+    if(this.map.has(key)){
         const value = this.map.get(key);
-        //reinsert
+        // delete and insert
         this.map.delete(key);
         this.map.set(key, value);
         return value;
+    }else{
+        return -1;
     }
-    return -1;
     
 };
 
@@ -31,20 +31,19 @@ LRUCache.prototype.get = function(key) {
  * @return {void}
  */
 LRUCache.prototype.put = function(key, value) {
-    // console.log("putting " + key + ' ' + value)
     if (this.map.has(key)){
-        //reinsert
+        // delete and insert
         this.map.delete(key);
         this.map.set(key, value);
     }else{
+        // just insert
         this.map.set(key, value);
     }
-    // check if exceeds the capacity
+    // check size
     if (this.map.size > this.capacity){
-        const popKey = this.map.keys().next().value;        
-        this.map.delete(popKey);
-        // console.log("popping " + popKey)
-        return popKey;
+        const firstKey = this.map.keys().next().value;
+        this.map.delete(firstKey);
+        return firstKey;
     }
     
 };
