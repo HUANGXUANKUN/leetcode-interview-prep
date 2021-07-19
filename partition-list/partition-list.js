@@ -11,27 +11,25 @@
  * @return {ListNode}
  */
 var partition = function(head, x) {
-    const headA = new ListNode(0); // less than x
-    const headB = new ListNode(0); // greater than x
     let currNode = head;
-    let nodeA = headA;
-    let nodeB = headB;
-    
-    while (currNode){
-        if(currNode.val < x){
+    let dummyHeadA = new ListNode(0);
+    let nodeA = dummyHeadA;
+    let dummyHeadB = new ListNode(0);
+    let nodeB = dummyHeadB;
+    while(currNode){
+        if (currNode.val < x){
             nodeA.next = currNode;
             nodeA = nodeA.next;
-        }
-        else if(currNode.val >= x){
+        }else{
             nodeB.next = currNode;
             nodeB = nodeB.next;
         }
-        currNode = currNode.next;  
+        currNode = currNode.next;
     }
     
-    // join a and b
-    nodeA.next = headB.next;
-    nodeB.next = null; // cur tail
-    return headA.next;
+    // disconnect nodeB
+    nodeB.next = null;
+    nodeA.next = dummyHeadB.next;
+    return dummyHeadA.next;
     
 };
