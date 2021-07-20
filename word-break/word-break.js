@@ -4,34 +4,27 @@
  * @return {boolean}
  */
 var wordBreak = function(s, wordDict) {
-    function solve(s, dict, startIndex, visited){
-        if(visited[startIndex] != -1){
-            if (visited[startIndex] == 0){
-                return false;
-            }
+    const nextWord = (s, dict, currIndex, visited) => {
+        if (currIndex >= s.length){
+            // reach the end, return true;
             return true;
         }
-        
-        let temp = [];
-        visited[startIndex] = 0; // visited, false result
-        for (let i = startIndex; i < s.length; i++){
-            temp.push(s[i]);
-            const word = temp.join('');
-            // check word
+        if(visited.has(currIndex)){
+            return false; // visited but not end, means it is invalid
+        }
+        let word = "";
+        for (let i = currIndex; i < s.length; i++){
+            word += s[i];
             if (dict.has(word)){
-                if (solve(s, dict, i+1, visited)){
-                    visited[startIndex] = 1; // from s[startIndex...n] is valid
-                    break;
-                }
-            }  
+                const result = nextWord(s, dict, i+1, visited);
+                if (result) return true;
+            }
         }
-        if (visited[startIndex] == 1){
-            return true;
-        }
+        visited.add(currIndex);
         return false;
-        
     }
     const dict = new Set(wordDict);
-    const visited = Array(s.length).fill(-1);
-    return solve(s, dict, 0, visited);
+    const visited = new Set();
+    return nextWord(s, dict, 0, visited);
+    
 };
