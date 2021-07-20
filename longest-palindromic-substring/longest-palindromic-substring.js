@@ -3,35 +3,43 @@
  * @return {string}
  */
 var longestPalindrome = function(s) {
-    // dp
-    const n = s.length;
-    const dp = Array(n).fill(false).map(() => Array(n).fill(false)); // dp[a][b] = s[a...b] is palindrome
+    const expand = (s, left, right) => {
+        if (right >= s.length || s[left] != s[right]) return [left, left];
+        let start = left,
+            end = right;
+        while(left >= 0 && right < s.length && s[left] == s[right]){
+            start = left;
+            end = right;
+            left--;
+            right++;
+        }
+        return [start, end];
+    }
+    // expand from center, start from i, i or (i-1, i)
     let maxLen = 0;
-    let startIndex = 0;
-          
-    // dp[a][b] = (s[a] == s[b] and dp[a+1][b-1])
-    for (let j = 0; j < n; j++){
-        for (let i = 0; i <= j; i++){
-            // check s[i] and s[j]
-            if (s[i] == s[j]){
-                // check distance
-                if (j - i + 1 <= 3) dp[i][j] = true;
-                else if (dp[i+1][j-1]) dp[i][j]= true;
-            }
-            if (dp[i][j] == true){
-                // console.log("i = " + i + " j = " + j);
-                // update max length
-                if (j-i+1 > maxLen){
-                    maxLen = j-i+1;
-                    startIndex = i;
-                    // console.log("maxlen " + maxLen)
-                    // console.log("startIndex " + startIndex)
-                }
-                
-            }
+    let start = 0, end = 0;
+    for (let i = 0; i < s.length; i++){
+        console.log("i = " + i)
+        // expand from i,i
+        const result1 = expand(s, i, i);
+        // expand from i, i+1
+        const result2 = expand(s, i, i+1);
+
+        
+        if (result1[1] - result1[0] + 1 > maxLen){
+            maxLen = result1[1] - result1[0] + 1;
+            start = result1[0], end = result1[1];      
+            // console.log(result1)
+            
+        }
+        if (result2[1] - result2[0] + 1 > maxLen){
+            maxLen = result2[1] - result2[0] + 1;
+            start = result2[0], end = result2[1];    
+            // console.log(result2)
         }
     }
-    // console.log(dp)
-    if(maxLen > 0) return s.slice(startIndex, startIndex + maxLen);
-    return "";
+    
+    // console.log([start, end])
+    return s.slice(start, end + 1)
+    
 };
