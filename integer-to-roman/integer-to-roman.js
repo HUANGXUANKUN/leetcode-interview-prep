@@ -3,60 +3,38 @@
  * @return {string}
  */
 var intToRoman = function(num) {
-    const lookupSingle = {
-        1:'I',
-        5:'V',
-        10:'X',
-        50:'L',
-        100:'C',
-        500:'D',
-        1000:'M'
+    // convert Interger to roman
+    // create lookup list for int to roman
+    const map = {
+        1000 :"M",
+        900 :"CM",  
+        500 :"D",
+        400 :"CD", 
+        100 :"C",
+        90 :"XC",
+        50 :"L",
+        40 :"XL",
+        10 :"X",
+        9 :"IX",
+        5 :"V",
+        4 :"IV",
+        1 :"I",  
     }
-    const lookupDouble = {
-        4: 'IV',
-        9: 'IX',
-        40: 'XL',
-        90: 'XC',
-        400: 'CD',
-        900: 'CM'
-    }
+    const lookup = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
     let i = 0;
-    let temp = [];
-    let result = [];
-    while (num!=0){
-        let digit = num%10;
-        const multi = 10 ** i;
-        console.log("mutipler:" + multi)
-        num = Math.floor(num/10);
-        while (digit != 0){
-            console.log(digit)
-            if (digit == 4 || digit == 9){
-                const value = multi*digit;
-                // console.log(value)
-                const symbol = lookupDouble[value];
-                temp.push(symbol);
-                digit = 0;
-            }
-            else if (digit >= 5){
-                // add 5 
-                const value = multi*5;
-                const symbol = lookupSingle[value];
-                temp.push(symbol)
-                digit = digit % 5;         
-            }else{
-                // add 1
-                const value = multi*1;
-                const symbol = lookupSingle[value];
-                temp.push(symbol)
-                digit--;
-            }
- 
+    const result = []
+    // just divide by the first occurrence 
+    while (num != 0){
+        // check the first one to divide
+        while (num < lookup[i]){
+            i++;
         }
-        console.log(temp.join(''))
-        result.push(temp.join(''))
-        temp.length = 0
-        i++;
-    }
-    
-    return result.reverse().join('');
+        const times =  Math.floor(num / lookup[i])
+        num %= lookup[i];
+        for(let j = 0; j<times; j++){
+            result.push(map[lookup[i]]);
+        }
+    }  
+    // console.log(result)
+    return result.join('');
 };
