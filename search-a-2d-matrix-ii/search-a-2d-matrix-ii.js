@@ -4,24 +4,18 @@
  * @return {boolean}
  */
 var searchMatrix = function(matrix, target) {
-    const n = matrix.length;
-    const m = matrix[0].length;
-    let i = n-1;
-    let j = 0;
-    // start from left bottom, moving up or right
+    // start from bottom left
+    const n = matrix.length,
+          m = matrix[0].length;
+    let i = n-1, j = 0;
     while(i >= 0 && j < m){
-        const curr = matrix[i][j];
-        if (target == curr){
-            return true; // found
-        }
-        else if (target < curr){
-            // all element on the right are not, move up
-            i -= 1
-        }
-        else{
-            // target is not at the same columns, move right
-            j += 1;
+        if (matrix[i][j] == target)return true;
+        else if (matrix[i][j] < target){
+            j++; // target larger, not in this column
+        }else{
+            i--; // target smaller, not in this row
         }
     }
     return false;
+    
 };
