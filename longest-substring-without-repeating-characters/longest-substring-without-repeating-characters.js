@@ -2,24 +2,28 @@
  * @param {string} s
  * @return {number}
  */
-
-// a b c d b a f
 var lengthOfLongestSubstring = function(s) {
-    let maxLen = 0;
-    let windowMap = new Map(); // contain index of character
+    const indexMap = new Map();
     let left = 0;
+    let maxLen = 0;
     for (let right = 0; right < s.length; right++){
         const curr = s[right];
-        // check if duplicated, 
-        // update left to windowMap(curr), and update windowMap
-        if (windowMap.has(curr)){
-            const prevIndex = windowMap.get(curr);
-            left = Math.max(left, prevIndex+1); // dont update if duplicate is not in window
+        // console.log(curr);
+        // check if existed
+        if (indexMap.has(curr)){
+            // existed, check if index position in within [left, right]
+            if (indexMap.get(curr) >= left){
+                // update left
+                left = indexMap.get(curr) + 1;
+            }
         }
-        windowMap.set(curr, right);
-        // no duplicate, update len
+        indexMap.set(curr, right);
+        // console.log(indexMap);
+        // console.log("left = " + left + " right = " + right);
+        
+        
+        // update maxLen
         maxLen = Math.max(maxLen, right-left+1);
     }
     return maxLen;
-    
 };
