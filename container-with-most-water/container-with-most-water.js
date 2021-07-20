@@ -4,19 +4,24 @@
  */
 var maxArea = function(height) {
     // two pointers
-    let left = 0;
-    let right = height.length-1;
-    let maxWater = 0;
+    let left = 0, right = height.length-1;
+    let maxSize = 0;
     while (left < right){
-        const contained = Math.min(height[left], height[right]) * (right - left);
-        // console.log(contained)
-        maxWater = Math.max(maxWater, contained);
-        if (height[left] <= height[right]){
+        // find the lowest one
+        const len = right-left;
+        const minHeight = Math.min(height[left], height[right]);
+        
+        maxSize = Math.max(maxSize, len * minHeight);
+        // console.log("left = " + left + " right = " + right)
+        // console.log("len = " + len)
+        // console.log("minHeight = " + minHeight)
+        // console.log(maxSize);
+        if (height[left] < height[right]){
             left++;
         }else{
             right--;
         }
     }
-    return maxWater;
+    return maxSize;
     
 };
