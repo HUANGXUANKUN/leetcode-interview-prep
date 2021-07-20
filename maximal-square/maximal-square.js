@@ -3,34 +3,30 @@
  * @return {number}
  */
 var maximalSquare = function(matrix) {
-    const n = matrix.length;
-    const m = matrix[0].length;
-    let maxLength = 0;
-    // convert to number
-    for (const row of matrix){
+    // check left, topleft and top
+    // find the min
+    const n = matrix.length,
+          m = matrix[0].length;
+    let maxLen = 0;
+    for (let i = 0; i < n; i++){
         for (let j = 0; j < m; j++){
-            row[j] = Number(row[j])
+            matrix[i][j] = Number(matrix[i][j]);
         }
     }
-    // console.log(matrix)
-    
     
     for (let i = 0; i < n; i++){
         for (let j = 0; j < m; j++){
-            if (i == 0 || j == 0){
-                maxLength = Math.max(maxLength, matrix[i][j])
-            }
-            else{
-                // check topleft, left and top
-                const minValue = Math.min(matrix[i-1][j-1], matrix[i-1][j], matrix[i][j-1])
-                if (matrix[i][j] == '1'){
-                    matrix[i][j] += minValue;
-                }
-                maxLength = Math.max(maxLength, matrix[i][j])
+            // check curr
+            if (matrix[i][j] == 1){
+                minLen = 0;
+                if (i >= 1 && j >=1) minLen = Math.min(matrix[i-1][j-1], matrix[i-1][j], matrix[i][j-1])
+                matrix[i][j] = 1 + minLen;
+                maxLen = Math.max(maxLen, matrix[i][j])
             }
         }
     }
     
-    // console.log(matrix)
-    return maxLength**2;
+    console.log(matrix)
+    return maxLen*maxLen;
+    
 };
