@@ -11,19 +11,24 @@
  * @return {boolean}
  */
 var isBalanced = function(root) {
-    // compare the max height of leftSubtree and rightSubTree
-    let balance = true;
-    const dfs =(root) => {
-        if (!root){
-            return 0;
+    // find the max left & right height from currNode to the end, and compare
+    const dfs = (root) => {
+        if (root == null){
+            return [0, true];
         }
-        const leftHeight = dfs(root.left);
-        const rightHeight = dfs(root.right);
-        if (Math.abs(rightHeight - leftHeight) > 1){
-            balance = false;
+        const leftResult = dfs(root.left)
+        const rightResult = dfs(root.right)
+        if (!leftResult[1] || !rightResult[1]){
+            // if sub tree unbalance
+            return [0, false];
         }
-        return 1 + Math.max(leftHeight, rightHeight);      
+        if (Math.abs(leftResult[0] - rightResult[0]) > 1){
+            // left right branch unblanced
+            return [0,false];
+        }
+        // balance, return [maxHeight, true]
+        return [1 + Math.max(leftResult[0], rightResult[0]), true];
     }
-    dfs(root);
-    return balance;
+    return dfs(root)[1];
+    
 };
