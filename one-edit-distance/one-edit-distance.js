@@ -4,37 +4,32 @@
  * @return {boolean}
  */
 var isOneEditDistance = function(s, t) {
-    // s is shorter than t
-    if (s.length > t.length){
-        return isOneEditDistance(t,s);
-    }
-    // base case
-    if (s.length == 0 && t.length == 0){
+    // check length
+    const n = s.length;
+    const m = t.length;
+    if (n > m) return isOneEditDistance(t, s);
+    if (Math.abs(n-m) > 1){
         return false;
     }
-    if (s == t || t.length - s.length > 1){
-        return false;
-    }
+    console.log(s)
+    console.log(t)
     
-    // find the first index differences, and skip that index to compare the remaining
-
-    for (let i = 0; i < s.length; i++){
-        if (s[i] == t[i]) continue;
-        // not equal
-        if(s.length == t.length){
-            //compare remaining
-            if (s.slice(i+1) == t.slice(i+1)) return true;
-            return false;
-            
-        }else{ // s.length != t.length
-            // compare s[i...n] with t[i+1...m]
-            if (s.slice(i) == t.slice(i+1)) return true;
-            return false;
+    // iterate from 0 to n-1, find first difference
+    for (let i = 0; i < n; i++){
+        if (s[i] != t[i]){
+            // different
+            if(n == m){
+                // compare remaining
+                return s.slice(i+1) == t.slice(i+1);
+            }else{
+                // n < m
+                return s.slice(i) == t.slice(i+1);
+            }
         }
     }
-    // equal for s[1...n] and t[1...n]
-    // check if both equal
-    return true;
     
-    
+    // s[1...n] == t[1...n]
+    // if sLen != tLen, then retrue
+    // if sLen == tLen, then false
+    return n == m ? false : true;
 };
