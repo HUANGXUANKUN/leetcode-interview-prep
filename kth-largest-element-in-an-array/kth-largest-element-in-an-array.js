@@ -4,52 +4,61 @@
  * @return {number}
  */
 var findKthLargest = function(nums, k) {
-    const quick_select = (nums, left, right) => {
-        const randomPivot = Math.floor(Math.random() * (right-left+1)) + left;
-        // const randomPivot = right;
-        
-        // console.log(nums)
-        // console.log("left right = " + [left, right])
-        // console.log("random pivot = " + randomPivot)
-        const partitionPivot = partition(nums, left, right, randomPivot);
-        
-        // console.log("parition pivot = " + partitionPivot)
-        // console.log(nums)
-        // console.log("")
-        
-        if (partitionPivot == nums.length-k){
-            console.log("found1!!!!")
-            return nums[partitionPivot];
-        }else if(partitionPivot < nums.length-k){
-            return quick_select(nums, partitionPivot+1, right)
-        }else{
-            return quick_select(nums, left, partitionPivot - 1);
-        }
-    } 
+    // use quick select
     
-    const partition = (nums, left, right, pivot) => {
-        // swap with right
-        const pivotValue = nums[pivot];
+    const quickSelect = (nums, k, left, right) => {
+        // console.log(nums)
         
-        [nums[right], nums[pivot]] = [nums[pivot], nums[right]];
-        let addPivot = left;
-        // not consider the last element
-        for (let i = left; i <= right-1; i++){
-            if (nums[i] <= pivotValue){
+        // console.log("left = " + left + " right = " + right) ;
+        
+        if (left == right){
+            return nums[left];
+        }
+        // get random pivot
+        const randomPivot = left + Math.floor(Math.random() * (right - left + 1));
+        // console.log("randomPivot = " + randomPivot)
+        
+        
+        // partition to get new pivot
+        const newPivot = partition(nums, randomPivot, left, right);
+        // console.log("newPivot = " + newPivot)
+        
+        // if new pivot == k-1, return 
+        if (newPivot == k-1){
+            return nums[k-1];
+        }
+        // if new pivot < k-1, left = new pivot + 1
+        else if (newPivot < k-1){
+            left = newPivot + 1
+        }
+        // if new pivot > k-1, right = new pivot - 1
+        else{
+            right = newPivot - 1;
+        }
+        return quickSelect(nums, k, left, right);
+    }
+    
+    const partition = (nums, selectedPivot, left, right) => {
+        // swap the nums[selectedPivot] to last
+        let pivotValue = nums[selectedPivot];
+        // swap
+        nums[selectedPivot] = nums[right];
+        nums[right] = pivotValue;
+        let swapIndex = left;
+        for (let i = left; i < right; i++){
+            if(nums[i] > pivotValue){
                 // swap
-                [nums[i], nums[addPivot]] = [nums[addPivot], nums[i]];
-                addPivot++;
+                [nums[i], nums[swapIndex]] = [nums[swapIndex], nums[i]];
+                swapIndex++;
             }
         };
-        // swap right with addPivot postition
-        // console.log("after swapping");
-        // console.log(nums);
-        [nums[right], nums[addPivot]] = [nums[addPivot], nums[right]];
-        return addPivot;
+        // console.log("afteriteration = " + nums);
+        
+        // swapback
+        [nums[right], nums[swapIndex]] = [nums[swapIndex], nums[right]];
+        // console.log("swapped back = " + nums)
+        
+        return swapIndex;
     }
-    const result = quick_select(nums, 0, nums.length-1)
-    // console.log(nums)
-    // console.log(result)
-    return result
-    
+    return quickSelect(nums, k, 0, nums.length-1);
 };
