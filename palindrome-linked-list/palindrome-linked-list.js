@@ -9,46 +9,39 @@
  * @param {ListNode} head
  * @return {boolean}
  */
-
-// 1 2 3 4 5
-//     .   .
 var isPalindrome = function(head) {
-    const reverseLinkList = (startNode) => {
+    const reverseLinkList = (node) => {
         let prev = null;
-        let currNode = startNode;
-        while(currNode != null){
-            const nextNode = currNode.next;
-            currNode.next = prev;
-            prev = currNode;
-            currNode = nextNode;
+        let curr = node;
+        while(curr){
+            next = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = next;
         }
         return prev;
     }
-    // slow fast pointer
-    if (!head) return false;
-    
-    // if only one node
-    if (!head.next) return true;
-    
+    // reverse second half
     let slow = head;
     let fast = head;
-    while(fast.next && fast.next.next){
+    while (fast.next && fast.next.next){
         slow = slow.next;
         fast = fast.next.next;
     }
-    
-    // slow is either the middle, or middle_left [1, (2), 3] or [1,(2),3,4]
-    let secondHead = slow.next;
-    // reverse secondList
-    let reversedSecondHead = reverseLinkList(secondHead);
+    // slow at mid or mid-left(even)
+    const secondHalf = slow.next;
+    // reverse secondHead
+    let secondHead = reverseLinkList(secondHalf);
+    // iterate firstHead and secondHead, 
+    // secondHead.length <= firstHead.length
     let firstHead = head;
-    while (reversedSecondHead != null){
-        if (firstHead.val != reversedSecondHead.val){
+    while(secondHead){
+        // compare value
+        if(firstHead.val != secondHead.val){
             return false;
         }
         firstHead = firstHead.next;
-        reversedSecondHead = reversedSecondHead.next;
+        secondHead = secondHead.next;
     }
     return true;
-    
 };
