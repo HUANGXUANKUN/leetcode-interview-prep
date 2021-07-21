@@ -12,41 +12,34 @@
  * @return {TreeNode}
  */
 var lowestCommonAncestor = function(root, p, q) {
-    const dfs = (root, p, q) => {
-        if (root == null){
-            return null;
-        } 
-        // console.log("visiting node = " + root.val)
-        // check value
-        if (root == p){
-            pFound = true;
-            // console.log("pFOund")
-        }else if (root == q){
-            qFound = true;
-            // console.log("qFOund")
-            
-        }
-        // find the children
-        const leftFound = dfs(root.left, p, q)
-        const rightFound = dfs(root.right, p, q)
-        // console.log("At node = " + root.val)
-        if (root == p || root == q){
-            console.log("returning root")
-            return root;
-        }else if (leftFound && rightFound){
-            console.log("both found")
-            return root;
-        }else if (leftFound || rightFound){
-            console.log("returning p or q found")
-            return leftFound || rightFound;
-        }
-        return null;    
-    }
-    
     let pFound = false,
         qFound = false;
-    const found = dfs(root, p, q);
-    if (pFound && qFound) return found;
+    const dfs = (root, p, q) => {
+        if (root == null) return null;
+        // check root val
+        // console.log(root.val)
+        if (root == p){
+            // console.log("p found")
+            pFound = true;
+        } 
+        if (root == q){
+            // console.log("q found")
+            qFound = true;
+        }
+        const leftFound = dfs(root.left, p, q);
+        const rightFound = dfs(root.right, p, q);
+        if (root == p || root == q){ // itSelf can be LCA
+            return root;
+        }
+        if (leftFound && rightFound){ // LCA
+            return (root);
+        }
+        if (leftFound || rightFound){ // LCA is in subtree
+            return leftFound || rightFound;
+        }
+    }
+    const result = dfs (root, p, q);
+    if (pFound && qFound) return result;
     return null;
     
 };
