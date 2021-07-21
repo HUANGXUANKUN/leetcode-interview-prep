@@ -25,10 +25,9 @@ var topKFrequent = function(nums, k) {
     // counter = {frequency: [num]}
     let result = [];
     for (let i = n; i >= 0 && k > 0; i--){
-        for (let j = 0; j < counter[i].length; j++){
-            result.push(counter[i][j]);
-            k--;
-            if(k<=0) break; 
+        if (counter[i].length > 0){
+            k-=counter[i].length;
+            result.push(...counter[i])
         }
     }
     return result;
