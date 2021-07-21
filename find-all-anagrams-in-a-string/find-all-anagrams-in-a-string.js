@@ -4,38 +4,37 @@
  * @return {number[]}
  */
 var findAnagrams = function(s, p) {
-    // use sliding window with size of s.length
-    // use letter array to record window letter count
-    const sDict = Array(26).fill(0);
-    for (let char of p){
+    // counter of p
+    const pLetterCount = Array(26).fill(0);
+    for(const char of p){
         const letterIndex = char.charCodeAt() - 'a'.charCodeAt();
-        sDict[letterIndex] += 1;
+        pLetterCount[letterIndex] += 1;
     }
-    const sDictString = sDict.toString();
+    // convert pLetterCount to string
+    const pStr = pLetterCount.toString();
     
-    const windowDict = Array(26).fill(0);
-    const result = [];
-    let left = 0;
+    const sLetterCount = Array(26).fill(0);
+    let result = [];
+    // sliding window
     for (let i = 0; i < s.length; i++){
-        // console.log("at i = " + i)
-        const curr = s[i];
-        const letterIndex = curr.charCodeAt() - 'a'.charCodeAt();
-        windowDict[letterIndex] += 1;
-        if (i - left + 1 > p.length){
-            // console.log("at i = " + i + " pop left most at " + left)
-            // pop left most
-            const leftMost = s[left];
-            const leftMostIndex = leftMost.charCodeAt() - 'a'.charCodeAt();
-            windowDict[leftMostIndex] -= 1;
-            left++;
+        const char = s[i];
+        const letterIndex = char.charCodeAt() - 'a'.charCodeAt();
+        sLetterCount[letterIndex] += 1;
+        // check if need shrink
+        if (i >= p.length){
+            const leftMostChar = s[i-p.length];
+            const leftMostIndex = leftMostChar.charCodeAt() - 'a'.charCodeAt();
+            sLetterCount[leftMostIndex] -= 1;
+        }
+        // compare string
+        if(i >= p.length-1){
+            if (sLetterCount.toString() == pStr){
+                result.push(i-p.length+1);
+            }
         }
         
-        // compare result
-        if (windowDict.toString() == sDictString){
-            // console.log("matched!")
-            result.push(left);
-        }
     }
     return result;
+    
     
 };
