@@ -3,56 +3,38 @@
  * @param {number} k
  * @return {string}
  */
-var removeKdigits = function(num, k) {
-    // compare leftMost char to the right char
-    const resultStack = [];
-    const numString = num.toString();
-    if(k >= numString.length) return '0';
-    let i = 0;
-    let reduced = 0;
-    while (i < numString.length && reduced < k){
-        // compare top of resultStack to curr
-        const curr = numString[i];
-        if (resultStack.length == 0){
-            if (curr != '0'){
-                resultStack.push(curr) 
-            }
-            i++;
-        }else{
-            // compare top to curr
-            if ( resultStack.length > 0 && resultStack[resultStack.length-1] > curr){
-                // remove top
-                // console.log("removed " + resultStack[resultStack.length-1])
-                resultStack.pop();
-                reduced += 1;
-            }else{
-                resultStack.push(curr);
-                i++;
-            }
-        } 
-        // console.log("at i = " + i + " curr = " + curr)
-        // console.log(resultStack)
-    }
+var removeKdigits = function(nums, k) {
+    // remove k digit
+    // use stack
+    // compare stack[-1] with nums[i]
+    // if stack[-1] > nums[i], remove stack[-1]
+    // else push nums[i] to stack, i++
     
-    // console.log(resultStack)
-    // console.log("i = " + i)
-    // add remaining
-    for (;i < numString.length; i++){
-        if (resultStack.length == 0 && numString[i] == '0'){
-            continue;
+    let stack = [];
+    let i = 0;
+    while (i < nums.length){
+        const curr = Number(nums[i]);
+        if (stack.length > 0 && stack[stack.length-1] > curr && k > 0){
+            // remove
+            stack.pop();
+            k--;
         }else{
-            resultStack.push(numString[i]); 
+            stack.push(curr);
+            i++;
         }
     }
-    
-    // if reduced < k
-    while (resultStack.length > 0 && reduced < k){
-        resultStack.pop();
-        reduced += 1;
+    // if k > 0
+    while (k > 0){
+        stack.pop();
+        k--;
     }
+    // console.log(stack);
+    let rawStr = stack.join('');
+    // console.log(rawStr)
+    const regex = /^0+/g;
+    rawStr = rawStr.replace(regex, "");
+    console.log(rawStr)
+    if (rawStr == "") return "0";
+    return rawStr;
     
-    console.log(resultStack)
-    // remove trailing zero
-    if(resultStack.length == 0) return '0';
-    return resultStack.join('');
 };
