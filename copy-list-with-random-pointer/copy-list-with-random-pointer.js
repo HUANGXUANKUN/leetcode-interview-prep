@@ -12,23 +12,30 @@
  * @return {Node}
  */
 var copyRandomList = function(head) {
+    // shallow copy list, store key, value pair as [oldNode, newNode]
     const nodeMap = new Map();
-    const shallowCopy = (node) => {
-        if (node == null) return null;
-        const copyNode = new Node(node.val, null, node.random);
-        copyNode.next = shallowCopy(node.next);
-        nodeMap.set(node, copyNode);
-        return copyNode;
+    let dummyHead = new Node(0);
+    let resultNode = dummyHead;
+    let currNode = head;
+    while(currNode){
+        // create new node
+        const newNode = new Node(currNode.val, null, currNode.random);
+        // save to map
+        nodeMap.set(currNode, newNode);
+        resultNode.next = newNode;
+        resultNode = resultNode.next;
+        currNode = currNode.next;
     }
-    // first create shallow copy with n new nodes
-    const copyHead = shallowCopy(head);
-    // then all random pointers in one node points to new nodes
-    let currCopyNode = copyHead;
-    while(currCopyNode){
-        if (currCopyNode.random != null){
-            currCopyNode.random = nodeMap.get(currCopyNode.random);      
+    // iterate list and reassign all random pointed node
+    let newNode = dummyHead.next;
+    while(newNode){
+        // reassign random pointed node
+        const randomOldNode = newNode.random;
+        if(randomOldNode){
+            newNode.random = nodeMap.get(randomOldNode); // reassign
         }
-        currCopyNode = currCopyNode.next;
+        newNode = newNode.next;
     }
-    return copyHead;
+    return dummyHead.next;
+    
 };
