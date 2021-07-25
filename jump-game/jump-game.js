@@ -3,24 +3,19 @@
  * @return {boolean}
  */
 var canJump = function(nums) {
-    let startIndex = 0;
-    let endIndex = startIndex + nums[0];
-    
-    while (endIndex < nums.length - 1){
-        console.log("startIndex = " + startIndex)
-        console.log("endIndex = " + endIndex)
-        // iterate from start to end
-        let newEndIndex = endIndex;
-        for (let i = startIndex; i <= endIndex; i++){
-            newEndIndex = Math.max(newEndIndex, i + nums[i])
+    // start from end position, look for posible jumper 
+    const n = nums.length;
+    if (n <= 1) return true;
+    let targetIndex = n-1;
+    for (let i = n-2; i >= 0; i--){
+        // check if possible
+        const jumpDist = nums[i];
+        if (i + jumpDist >= targetIndex){
+            // can jump, update targetIndex
+            if (i == 0) return true; // at start position
+            targetIndex = i;
         }
-        // check if can move forward
-        if (endIndex == newEndIndex){
-            // never moved 
-            return false;
-        }
-        startIndex = endIndex +1;
-        endIndex = newEndIndex;
     }
-    return true;
+    return false;
+    
 };
