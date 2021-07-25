@@ -3,47 +3,45 @@
  * @return {number}
  */
 var calculate = function(s) {
-    //replace all space
-    s = s.replaceAll(' ','')
-    // console.log(s)
-    const stack = [];
-    let currValue = 0;
-    let prevSymbol = '+';
-    let prevValue = 0;
-    let sum = 0;
-    for (let i = 0; i < s.length; i++){
-        const curr = s[i];
-        if (!isNaN(curr) && i != s.length-1){ // if is number of is not last element
-            // is a number
-            const num = Number(curr);
-            currValue = currValue * 10 + num;
-        }else{ // is symbol || last element
-            if (i == s.length-1){
-                // last element, convert to number
-                const num = Number(curr);
-                currValue = currValue * 10 + num;
+    // replace all ''
+    s = s.replaceAll(' ','');
+    const n = s.length;
+    let prevSign = '+';
+    let ans = 0;
+    let prevNum = 0;
+    let currNum = 0;
+    
+    for (let i = 0; i < n; i++){
+        const char = s[i];
+        if (i == n-1 || char == '+' || char == '-' || char == '*' || char == '/'){
+
+            // if this is last
+            if (i == n-1){
+                currNum = currNum * 10 + parseInt(char);
+
             }
-            // console.log('at i = ' + i + ' curr value = ' + currValue)
-            // console.log('sum = ' + sum)
-            // console.log("prevSymbol = " + prevSymbol)
-            // is symbol
-            // check prev symbol
-            if (prevSymbol == '+'){
-                sum += prevValue;
-                prevValue = currValue;
-            }else if (prevSymbol == '-'){
-                sum += prevValue;
-                prevValue = -currValue;
-            }else if (prevSymbol == '*'){
-                prevValue = prevValue * currValue;
-            }else if (prevSymbol == '/'){
-                prevValue = parseInt(prevValue / currValue);
+            if (prevSign == '+'){
+                ans += prevNum;
+                prevNum = currNum;
+            }else if (prevSign == '-'){
+                ans += prevNum;
+                prevNum = -currNum;
+            }else if (prevSign == '*'){
+                prevNum = prevNum * currNum;
+            }else if (prevSign == '/'){
+                prevNum = parseInt(prevNum / currNum);
             }
-            currValue = 0;
-            prevSymbol = curr;
-        }      
+            currNum = 0;
+            prevSign = char;
+            
+        }else{
+            // is number
+            currNum = currNum * 10 + parseInt(char);
+            // console.log("new currNum = " + currNum)
+        }
+        // console.log("new sum = " + ans)
     }
-    // console.log("prev value = " + prevValue)
-    sum += prevValue;
-    return sum;
+    // console.log("adding last currNum = " + currNum)
+    ans += prevNum;
+    return ans;
 };
