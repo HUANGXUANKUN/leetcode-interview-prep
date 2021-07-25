@@ -10,31 +10,34 @@
  * @return {ListNode}
  */
 var deleteDuplicates = function(head) {
-
-    if (!head || !head.next){
-        return head;
-    }
-    // if curr != curr.next, then add curr to
-    let dummyHead = new ListNode(0);
-    let curr = head;
+    if (head == null) return head;
+    const dummyHead = new ListNode(0);
     let resultNode = dummyHead;
-    let hasDuplicate = false;
-    while (curr != null){
-        if(curr.next && curr.val == curr.next.val){
-            hasDuplicate = true;
-        }else{
-            //check if duplicated
-            if(!hasDuplicate){
-                //curr is not duplicated
+    let curr = head;
+    let isDuplicated = false;
+    while(curr != null){
+        // check with next node
+        // if nextnode diff || last node, check if curr is duplicated
+        if (curr.next == null || curr.val != curr.next.val){
+            // check if curr is duplicated
+            if (isDuplicated){
+                isDuplicated = false;
+            }else{
+                // curr is not duplicated
                 resultNode.next = curr;
                 resultNode = resultNode.next;
             }
-            hasDuplicate = false; 
+        } 
+        // else if nextnode same, curr = curr.next
+        else{
+            // next is equal
+            isDuplicated = true;
         }
         curr = curr.next;
     }
-    // break tail of resultNode
+    // detached resultNode.next
     resultNode.next = null;
     return dummyHead.next;
     
+
 };
