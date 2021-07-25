@@ -11,23 +11,22 @@
  * @return {void} Do not return anything, modify root in-place instead.
  */
 var flatten = function(root) {
-    if (root == null) return false;
+    if (root == null) return root;
+    // preorder
     const dummyHead = new TreeNode(0);
-    let curr = dummyHead;
-    let stack = [root];
+    let resultNode = dummyHead;
+    const stack = [];
+    stack.push(root);
     while (stack.length > 0){
-        // curr
-        const node = stack.pop();
-        if (node.right) stack.push(node.right);
-        if (node.left) stack.push(node.left);
-        
-        // disconnect
-        node.left = null;
-        // node.right = null; 
-        
-        // attached to curr
-        curr.right = node;
-        curr = curr.right;
+        const curr = stack.pop();
+        resultNode.right = curr;
+        resultNode.left = null;
+        resultNode = resultNode.right;
+        // push right first
+        if (curr.right) stack.push(curr.right); 
+        // push left
+        if (curr.left) stack.push(curr.left); 
     }
     return dummyHead.right;
+    
 };
