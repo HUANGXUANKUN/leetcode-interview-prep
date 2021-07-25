@@ -11,22 +11,29 @@
  * @return {void} Do not return anything, modify root in-place instead.
  */
 var flatten = function(root) {
-    if (root == null) return root;
-    // preorder
-    const dummyHead = new TreeNode(0);
-    let resultNode = dummyHead;
-    const stack = [];
-    stack.push(root);
-    while (stack.length > 0){
-        const curr = stack.pop();
-        resultNode.right = curr;
-        resultNode.left = null;
-        resultNode = resultNode.right;
-        // push right first
-        if (curr.right) stack.push(curr.right); 
-        // push left
-        if (curr.left) stack.push(curr.left); 
+    const dfs = (node) => {
+        if (node == null) return node;
+        // if has left and right, move right-branch to the right most sub-branch of left branch
+        // then move left-branch to right-branch, then next
+        if (node.left && node.right){
+            let rightMostInLeft = node.left;
+            while(rightMostInLeft.right != null){
+                rightMostInLeft = rightMostInLeft.right;
+            }
+            rightMostInLeft.right = node.right;
+            node.right = node.left;
+            node.left = null;
+        }
+        // if only left, then move left to right
+        else if (node.left){
+            node.right = node.left;
+            node.left = null;
+        }
+        // only node.right
+        // visit node.right
+        dfs(node.right);
     }
-    return dummyHead.right;
+    dfs(root);
+    return root;
     
 };
