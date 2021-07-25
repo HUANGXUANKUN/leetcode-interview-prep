@@ -4,27 +4,32 @@
  * @return {number[][]}
  */
 var combinationSum3 = function(k, n) {
-    const solve = (k, n, startNum, sum, currList, result) => {
+    // each number is used at most once
+    const recur = (k, targetSum, startNum, currSum, currList, result) => {
+        // console.log("startNum | currSum | [currList]            | result")
+        // console.log([startNum, currSum, currList])
         // base case
         if (currList.length == k){
-            if (sum == n){
+            if (currSum == targetSum){
+                // console.log("###############added###################")
                 result.push([...currList]);
             }
             return;
         }
-        if (sum > n || startNum > 9){ // impossible
+        
+        if (startNum > 9 || currSum > targetSum){
+            // exceed, impossible
             return;
         }
+        
         for (let i = startNum; i <= 9; i++){
-            // add the num
             currList.push(i);
-            solve(k, n, i+1, sum + i, currList, result);
-            // backtrack
+            recur(k, targetSum, i+1, currSum+i, currList, result);
             currList.pop();
         }
     }
-    // const numSet = new Set();
+    
     const result = [];
-    solve(k, n, 1, 0, [], result);
+    recur(k, n, 1, 0, [], result);
     return result;
 };
