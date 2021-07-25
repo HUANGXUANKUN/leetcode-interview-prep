@@ -3,27 +3,34 @@
  * @return {string}
  */
 var minRemoveToMakeValid = function(s) {
-    const stack = []
-    const arr = s.split('');
-    for (let i = 0; i < arr.length; i++){
-        const curr = arr[i];
-        if (curr == '('){
-            stack.push(i);
-        }else if (curr == ')'){
-            // check if top of stack is (
-            if (stack.length == 0 || arr[stack[stack.length-1]] == ')'){
-                // remove this )
-                arr[i] = '';
-            }else{
-                // top is stack is (
+    // push tuple of ['(', index] into stack
+    // remove valid pair of ()
+    // for all remaining in stack, marked as removed
+    const stack = [];
+    for (let i = 0; i < s.length; i++){
+        const char = s[i];
+        if (char == '('){
+            // push to stack
+            stack.push([char, i]);
+        }else if (char == ')'){
+            // check if valid
+            if (stack.length > 0 && stack[stack.length-1][0] == '('){
+                // valid )
                 stack.pop();
+            }else{
+                stack.push([char, i]); // invalid 
             }
         }
+        // console.log("at i = " + i + " stack = " + stack)
     }
-    // for all remaining in stack, remove too
-    for (const index of stack){
-        arr[index] = "";
+    const removeIndex = stack.map(([char, index])=>index);
+    // console.log(removeIndex);
+    const removeSet = new Set(removeIndex);
+    const result = [];
+    for (let i = 0; i < s.length; i++){
+        if (removeSet.has(i)) continue;
+        result.push(s[i]);
     }
-    return arr.join('');
+    return result.join('');
     
 };
