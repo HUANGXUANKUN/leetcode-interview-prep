@@ -3,25 +3,28 @@
  * @return {number}
  */
 var longestValidParentheses = function(s) {
+    // use stack to mark previous valid (, 
+    
+    // if empty, mark curr i as previous valid (
     const stack = [-1];
-    let currLen = 0;
-    let maxLen = 0;
+    let longestLen = 0;
+    
     for (let i = 0; i < s.length; i++){
         const char = s[i];
-        // if (
         if (char == '('){
             stack.push(i);
-        }else{
-            stack.pop(); // pop prev (
-            if (stack.length > 0){
-                // calculate len
-                maxLen = Math.max(maxLen, i - stack[stack.length-1]);
+        }else if (char == ')'){
+            // pop previous (
+            stack.pop();
+            if (stack.length > 0){ // valid )
+                // there is valid 
+                const len = i - stack[stack.length - 1];
+                longestLen = Math.max(longestLen, len);
             }else{
-                // nothing, add break point
+                // empty, invalid )
                 stack.push(i);
             }
         }
     }
-    return maxLen;
-    
+    return longestLen;
 };
