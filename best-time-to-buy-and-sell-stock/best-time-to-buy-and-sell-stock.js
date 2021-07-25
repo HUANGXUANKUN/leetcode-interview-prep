@@ -3,18 +3,20 @@
  * @return {number}
  */
 var maxProfit = function(prices) {
-    // find the max prices[j] - prices[i] where j > i
-    // record the min prices so far
-    let maxDiff = 0;
-    let minPrice = prices[0];
-    for (let i = 1; i < prices.length; i++){
-        // check if largest than max
-        maxDiff = Math.max(maxDiff, prices[i] - minPrice)
-        minPrice = Math.min(minPrice, prices[i]);
-        
+    // find the largest (p[j]-p[i])
+    const n = prices.length;
+    const maxFromRight = Array(n).fill(0);
+    let currMax = 0;
+    for (let i = n - 1; i >= 0; i--){
+        currMax = Math.max(currMax, prices[i]);
+        maxFromRight[i] = currMax;
     }
-    return maxDiff;
-    
+    let currMaxProfit = 0;
+    // iterate from i = 0 to n-2
+    for (let i = 0; i <= n-2; i++){
+        currMaxProfit = Math.max(currMaxProfit,(maxFromRight[i+1]-prices[i]));
+    }
+    return currMaxProfit;
     
     
 };
