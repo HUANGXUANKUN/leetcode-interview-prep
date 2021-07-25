@@ -6,27 +6,38 @@ var maxProfit = function(prices) {
     const n = prices.length;
     if (n <= 1) return 0;
     // at most two transaction
-    // find profits from the left
-    const maxProfitFromLeft = Array(n).fill(0);
-    let minFromLeft = prices[0];
-    for(let i = 1; i < n; i++){
-        maxProfitFromLeft[i] = Math.max(maxProfitFromLeft[i-1], prices[i]-minFromLeft);
-        minFromLeft = Math.min(minFromLeft, prices[i]);
-    }
+    // find max transaction for [1, i] and [i+1, n]
+    const maxFromLeft = Array(n).fill(0);
+    let leftMin = Number.POSITIVE_INFINITY;
+    let leftMaxProfit = 0;
     
-    // find profits from the right
-    const maxProfitFromRight = Array(n).fill(0);
-    let maxFromRight = prices[n-1];
-    for (let i = n-2; i >= 0; i--){
-        maxProfitFromRight[i] = Math.max(maxProfitFromRight[i+1], maxFromRight - prices[i]);
-        maxFromRight = Math.max(maxFromRight, prices[i]);
-    }
-    
-    // find the max profit
-    let maxProfit = 0;
+    // find max transaction for [i...i] for all i
     for (let i = 0; i < n; i++){
-        const currProfit = maxProfitFromLeft[i] + maxProfitFromRight[i];
-        maxProfit = Math.max(maxProfit, currProfit);
+        leftMin = Math.min(leftMin, prices[i]);
+        leftMaxProfit = Math.max(leftMaxProfit, prices[i]-leftMin);
+        maxFromLeft[i] = leftMaxProfit;
+        // console.log([leftMin, leftMaxProfit, maxFromLeft[i]])
     }
-    return maxProfit;
+    // console.log(maxFromLeft)
+    
+    // find max transaction for [i...n] for all i
+    const maxFromRight = Array(n).fill(0);
+    let rightMax = Number.NEGATIVE_INFINITY;
+    let rightMaxProfit = 0;
+
+    for (let i = n-1; i >= 0; i--){
+        rightMax = Math.max(rightMax, prices[i]);
+        rightMaxProfit = Math.max(rightMaxProfit, rightMax - prices[i]);
+        maxFromRight[i] = rightMaxProfit;
+    }
+    
+    // find max transaction for [i...i] for all i
+    let maxResult = 0;
+    for (let i = 0; i < n; i++){
+        const leftProfit = maxFromLeft[i]; // profit of [1..i]
+        const rightProfit = maxFromRight[i]; // profit of [i..n]
+        maxResult = Math.max(maxResult, leftProfit + rightProfit);
+    }
+    return maxResult;
+    
 };
