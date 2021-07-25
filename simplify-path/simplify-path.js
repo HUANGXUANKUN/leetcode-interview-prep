@@ -3,23 +3,19 @@
  * @return {string}
  */
 var simplifyPath = function(path) {
-    const tokens = path.split('/');
     const stack = [];
-    console.log(tokens)
+    const tokens = path.split('/');
     for (const token of tokens){
-        // case to ignore
-        if (token == '/' || token == '' || token =='.'){
+        // skip space, ..., .
+        if (token == '' || token == '.'){
             continue;
-        }
-        if (token == '..'){
-            // remove one from stack
+        }else if (token == '..'){
             stack.pop();
-        }
-        else{
+        }else{
             stack.push(token);
         }
-        // console.log(stack)
     }
+    // console.log(stack);
     return '/' + stack.join('/');
     
 };
