@@ -3,34 +3,28 @@
  * @return {number}
  */
 var minPathSum = function(grid) {
-    const directions = [[0, 1], [1, 0]];
-    const dfs = (grid, i, j, n, m, pathSum, currSum) => {
-        // base case
+    // backtracking + memorization
+    // dp[i][j] = min number of paths from (i, j) to (n, m)
+    // return dp[0][0]
+    const dfs = (grid, n, m, i, j, dp) => {
+        // basecase
+        if (i == n-1 && j == m-1){
+            return grid[i][j]; // reach end
+        }
         if (i >= n || j >= m){
-            return;
+            return Number.POSITIVE_INFINITY; // exceed
         }
-        
-        // check if visited
-        if (pathSum[i][j] != -1){
-            // visited, check currSum
-            if (currSum + grid[i][j] >= pathSum[i][j]){ // this is not shorter
-                return;
-            }
+        // within boundary
+        if (dp[i][j] != -1){
+            return dp[i][j]; // visited
         }
-        // not visited, or shorter path
-        pathSum[i][j] = currSum + grid[i][j];
-        
-        // visit 3 directions other than incoming path
-        for (let [a, b] of directions){
-            dfs(grid, i+a, j+b, n, m, pathSum, pathSum[i][j]);
-        }
+        const rightSum = dfs(grid, n, m, i, j+1, dp); //right
+        const bottomSum = dfs(grid, n, m, i+1, j, dp); //bottom
+        dp[i][j] = grid[i][j] + Math.min(rightSum, bottomSum);
+        return dp[i][j];
     }
-    
-    // use pathSum[i][j] to record min sum from (0, 0) to (i, j)
-    const n = grid.length;
-    const m = grid[0].length;
-    const pathSum = Array(n).fill(0).map(()=>Array(m).fill(-1)); // init -1
-    dfs(grid, 0, 0, n, m, pathSum, 0);
-    return pathSum[n-1][m-1];
-    
+    const n = grid.length,
+          m = grid[0].length;
+    const dp = Array(n).fill(0).map(() => Array(m).fill(-1));
+    return dfs(grid, n, m, 0, 0, dp);
 };
