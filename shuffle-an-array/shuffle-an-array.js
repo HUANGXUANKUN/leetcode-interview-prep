@@ -2,8 +2,9 @@
  * @param {number[]} nums
  */
 var Solution = function(nums) {
-    this.shuffled = nums;
-    this.original = [...nums];
+    this.originalNums = [...nums];
+    this.shuffledNums = [...nums];
+    
 };
 
 /**
@@ -11,8 +12,8 @@ var Solution = function(nums) {
  * @return {number[]}
  */
 Solution.prototype.reset = function() {
-    this.shuffled = [...this.original];
-    return this.shuffled;
+    this.shuffledNums = [...this.originalNums];
+    return this.shuffledNums;
 };
 
 /**
@@ -20,16 +21,17 @@ Solution.prototype.reset = function() {
  * @return {number[]}
  */
 Solution.prototype.shuffle = function() {
-    // shuffled shuffled
-    for (let i = 0; i < this.shuffled.length; i++){
-        // find random index from [i to n]
-        const randomIndex = i + Math.floor(Math.random() * (this.shuffled.length - i));
-        // swap
-        [this.shuffled[i], this.shuffled[randomIndex]] = [this.shuffled[randomIndex], this.shuffled[i]];
-                            
+    this.reset();
+    // shuffle
+    for (let i = 0; i < this.shuffledNums.length; i++){
+        // get a random index from [i...n], then swap
+        // eg i = 1, n = 3, randomIndex = 1 + random[0, 2)
+        const randomIndex = i + Math.floor(Math.random() * this.shuffledNums.length - i);
+        const temp = this.shuffledNums[i];
+        this.shuffledNums[i] = this.shuffledNums[randomIndex];
+        this.shuffledNums[randomIndex] = temp;
     }
-    return this.shuffled;
-    
+    return this.shuffledNums;
 };
 
 /** 
