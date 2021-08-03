@@ -13,24 +13,24 @@
  * @return {Node}
  */
 var inorderSuccessor = function(node) {
-    if (!node) return null;
-    // if node has right child, find the left most of its right child
+    // if node.right exists, look for left most child in the right branch
     if (node.right){
-        node = node.right;
-        while(node.left){
-            node = node.left;
-        }   
-        return node;
-    }
-    // if no right child, find the first parent on the right
-    while(node.parent){
-        const parentNode = node.parent;
-        if (parentNode.left == node){
-            // first right parent
-            return parentNode;
+        let child = node.right;
+        // find the left most
+        while(child.left){
+            child = child.left;
         }
-        node = node.parent;
+        return child;
     }
-    return null; // no right parent 
-    
+  // else, look for the first parent on its right
+    let parent = node.parent;
+    // check all the parents, return the first parent on the right
+    while (parent){
+        if (parent.left == node){
+            return parent;
+        }
+        node = parent;
+        parent = parent.parent;
+    }
+    return parent;  
 };
