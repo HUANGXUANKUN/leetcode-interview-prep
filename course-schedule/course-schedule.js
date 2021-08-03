@@ -4,37 +4,53 @@
  * @return {boolean}
  */
 var canFinish = function(numCourses, prerequisites) {
-    // topology
-    // create adjList
-    // create inDegreeCount
-    const adjList = Array(numCourses).fill(0).map(()=>[]);
-    const inDegreeCount = Array(numCourses).fill(0);
-    for (let [to, from] of prerequisites){
-        inDegreeCount[to]+=1;
-        adjList[from].push(to);
+    // adj graph
+    // indegree count map
+    const adjMap = new Map();
+    const inDegMap = new Map();
+    // init
+    for (let i = 0; i < numCourses; i++){
+        adjMap.set(i, []);
+        inDegMap.set(i, 0);
     }
-    // find the node with zero indegree count
+    // assign values by iterating prereq
+    for (const [to, from] of prerequisites){
+        adjMap.get(from).push(to);
+        inDegMap.set(to, inDegMap.get(to)+1);
+    }
+    console.log(adjMap);
+    console.log(inDegMap);
     let queue = [];
-    for (let i= 0; i < numCourses; i++){
-        if (inDegreeCount[i] == 0){
-            queue.push(i);
+    let visited = []; 
+    // look for all the entry points with 0 indegree count
+    for (const key of inDegMap.keys()){
+        // if inDegMap[key] = 0, add as entry
+        if(inDegMap.get(key) == 0){
+            queue.push(key);
         }
     }
-    let topoResultCount = 0;
-    while (queue.length > 0){
+    console.log(queue);
+    while(queue.length > 0){
         let newQueue = [];
-        for (const from of queue){
-            topoResultCount += 1;
-            // check all its destination, remove the edge by reducing indegreecount
-            for (const child of adjList[from]){
-                inDegreeCount[child]-=1;
-                if (inDegreeCount[child] == 0){
+        for (const node of queue){
+            console.log("visiting " + node);
+            // node is the current visiting point
+            visited.push(node);
+            // check all the children from node
+            const children = adjMap.get(node);
+            for(const child of children){
+                inDegMap.set(child, inDegMap.get(child)-1);
+                // if inDeg = 0, then add as next entry point
+                if (inDegMap.get(child) == 0){
                     newQueue.push(child);
                 }
             }
         }
-        queue = newQueue;
+        queue = newQueue;      
     }
-    return topoResultCount == numCourses ? true : false;
     
+    // compare the number of visited node with the number of courses
+    if (visited.length == numCourses) return true;
+    return false;
+
 };
