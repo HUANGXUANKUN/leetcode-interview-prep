@@ -4,26 +4,33 @@
  * @return {boolean}
  */
 var wordPattern = function(pattern, s) {
-    const words = s.split(' ');
-    if (pattern.length != words.length){
-        return false;
-    }
-    const pToWordMap = new Map(); // {pattern : word}
-    const wordToPMap = new Map(); // {word : p}
-    
-    for (let i = 0; i < pattern.length; i++){
+    const tokens = s.split(' ');
+    // check length
+    const n = pattern.length, 
+          m = tokens.length;
+    if (n != m) return false;
+    // pattern to word map
+    // word to pattern map
+    const patternToWord = new Map();
+    const wordToPattern = new Map();
+    for (let i = 0; i < n; i++){
         const p = pattern[i];
-        const word = words[i];
-        // console.log(map);
-        if (pToWordMap.has(p)){
-            // check if equal
-            if (pToWordMap.get(p) != word) return false;
+        const word = tokens[i];
+        // pattern exists before
+        if (patternToWord.has(p)){
+            if (patternToWord.get(p) != word){
+                return false;
+            }
+            // if word does not exists or word to pattern is not the same
+            if (!wordToPattern.has(word) || wordToPattern.get(word) != p){
+                return false;
+            }
+        }else{
+            // if pattern not exists, then word not exists too
+            if (wordToPattern.has(word)) return false;
         }
-        if (wordToPMap.has(word)){
-            if (wordToPMap.get(word) != p) return false;
-        }
-        pToWordMap.set(p, word);
-        wordToPMap.set(word, p);
+        patternToWord.set(p, word);
+        wordToPattern.set(word, p);
     }
     return true;
     
