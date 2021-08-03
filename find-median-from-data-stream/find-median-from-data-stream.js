@@ -2,8 +2,8 @@
  * initialize your data structure here.
  */
 var MedianFinder = function() {
+    // insertion sort
     this.arr = [];
-    
     
 };
 
@@ -12,21 +12,20 @@ var MedianFinder = function() {
  * @return {void}
  */
 MedianFinder.prototype.addNum = function(num) {
-    // use insertion sort
-    // find the insertion point
+    // console.log("insert num = " + num);
+    
     if (this.arr.length == 0) {
         this.arr.push(num);
         return;
     }
     
-    let i = this.arr.length;
-    while (i >= 1 && this.arr[i-1] > num){
-        // console.log("this.arr[i-1] = " + this.arr[i-1])
-        i--; 
+    // find insertion index
+    let idx = this.arr.findIndex(curr => curr > num);
+    if (idx === -1){
+        idx = this.arr.length;
     }
-    // console.log("insert at i = " + i)
-    this.arr.splice(i, 0, num); // insert at i, replace 0 element
-    // console.log("after adding num = " + num);
+    // console.log("insert num = " + num, "at index = " + idx);
+    this.arr.splice(idx, 0, num);
     // console.log(this.arr);
 };
 
@@ -34,15 +33,15 @@ MedianFinder.prototype.addNum = function(num) {
  * @return {number}
  */
 MedianFinder.prototype.findMedian = function() {
-    if (this.arr.length & 1 == 1) {
-        // is odd
-        return this.arr[Math.floor(this.arr.length/2)];
-    }else{
-        // even
-        const index = this.arr.length/2;
-        return this.arr[index-1] * 0.5 + this.arr[index] * 0.5;
+    // if odd
+    if(this.arr.length & 1 == 1){
+        const idx = Math.floor(this.arr.length / 2);
+        return this.arr[idx];
     }
-    
+    // if even
+    const idx1 = Math.floor( (this.arr.length-1) / 2); //eg length = 4, idx1 = 3/2 = 1
+    const idx2 = idx1 + 1;
+    return this.arr[idx1] /2 + this.arr[idx2]/2;
 };
 
 /** 
