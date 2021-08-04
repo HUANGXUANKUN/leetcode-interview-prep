@@ -4,27 +4,30 @@
  * @return {boolean}
  */
 var wordBreak = function(s, wordDict) {
-    const nextWord = (s, dict, currIndex, visited) => {
-        if (currIndex >= s.length){
-            // reach the end, return true;
+    const isValid = (s, wordSet, startIndex, dp) => {
+        // base case
+        if (startIndex == s.length){
+            // s = leetcode, we are at i = 8, it implies "leetcode" is valid
             return true;
         }
-        if(visited.has(currIndex)){
-            return false; // visited but not end, means it is invalid
+        // if we have checked this startIndex
+        if (dp[startIndex] == true){
+            return false; // because it is invalid
         }
-        let word = "";
-        for (let i = currIndex; i < s.length; i++){
-            word += s[i];
-            if (dict.has(word)){
-                const result = nextWord(s, dict, i+1, visited);
-                if (result) return true;
+        dp[startIndex] = true;
+        // starting from startIndex
+        for (let i = startIndex; i < s.length; i++){
+            // check if s[startIndex: i+1] is a valid word
+            const temp = s.slice(startIndex, i+1);
+            if (wordSet.has(temp)){
+                // it is a valid word, check remaining s[i+1, n]
+                const remainingIsValid = isValid(s, wordSet, i+1, dp);
+                if (remainingIsValid) return true;
             }
         }
-        visited.add(currIndex);
         return false;
     }
-    const dict = new Set(wordDict);
-    const visited = new Set();
-    return nextWord(s, dict, 0, visited);
-    
+    const dp = Array(s.length).fill(false);
+    const wordSet = new Set(wordDict);
+    return isValid(s, wordSet, 0, dp);
 };
