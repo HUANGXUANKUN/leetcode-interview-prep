@@ -4,37 +4,40 @@
  * @return {number[]}
  */
 var findAnagrams = function(s, p) {
-    // counter of p
+    // sliding window with size of p.length
+    // O(N) to O(N^2)
+    
+    // basecase
+    if (p.length > s.length) return [];
+    let left = 0;
+    const letterCount = Array(26).fill(0); // a -> 0, b->1, ... z -> 25
     const pLetterCount = Array(26).fill(0);
-    for(const char of p){
-        const letterIndex = char.charCodeAt() - 'a'.charCodeAt();
+    for (const char of p){
+        const letterIndex = char.charCodeAt() - 'a'.charCodeAt(); // char - 'a'
         pLetterCount[letterIndex] += 1;
     }
-    // convert pLetterCount to string
-    const pStr = pLetterCount.toString();
-    
-    const sLetterCount = Array(26).fill(0);
-    let result = [];
-    // sliding window
-    for (let i = 0; i < s.length; i++){
-        const char = s[i];
-        const letterIndex = char.charCodeAt() - 'a'.charCodeAt();
-        sLetterCount[letterIndex] += 1;
-        // check if need shrink
-        if (i >= p.length){
-            const leftMostChar = s[i-p.length];
-            const leftMostIndex = leftMostChar.charCodeAt() - 'a'.charCodeAt();
-            sLetterCount[leftMostIndex] -= 1;
+    const hashPString = pLetterCount.toString();
+    const result = [];
+    for (let right = 0; right < s.length; right++){
+        const letter = s[right];
+        const letterIndex = letter.charCodeAt() - 'a'.charCodeAt(); // char - 'a'
+        letterCount[letterIndex] += 1;
+        // shrink the window if needed
+        if (right -left + 1 > p.length){
+            const leftMostLetter = s[left];
+            left += 1;
+            const leftMostIndex = leftMostLetter.charCodeAt() - 'a'.charCodeAt(); // char - 'a'
+            letterCount[leftMostIndex] -= 1;
         }
-        // compare string
-        if(i >= p.length-1){
-            if (sLetterCount.toString() == pStr){
-                result.push(i-p.length+1);
+        // windowsize is absoulte <= p.length
+        if (right - left + 1 == p.length){
+            // check every single char count
+            // hashing an array
+            const hashString = letterCount.toString();
+            if (hashString == hashPString){
+                result.push(left);
             }
         }
-        
     }
     return result;
-    
-    
 };
