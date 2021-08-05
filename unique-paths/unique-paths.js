@@ -4,28 +4,27 @@
  * @return {number}
  */
 var uniquePaths = function(n, m) {
-    // use path[i][j] to record number of path from (i, j) to (n, m)
-    const dfs = (i, j, n, m, paths) => {
-        // console.log(`i = ${i}, j = ${j}`)
-        if(i == n-1 && j == m-1){
-            // reach target
-            paths[i][j] = 1;
-            return paths[i][j];
+    const travel = (i, j, n, m, dp) => {
+        // if we reach the end, return 1
+        if (i == n-1 && j == m-1){
+            return 1;
         }
-        // check if out of bounds
+        // if going out of boundry, return 0
         if (i >= n || j >= m){
             return 0;
         }
-        // check if visited
-        if (paths[i][j] != -1) return paths[i][j];
-        // continue 
-        
-        const rightPaths = dfs(i, j+1, n, m, paths);
-        const bottomPaths = dfs(i+1, j, n, m, paths);
-        paths[i][j] = rightPaths + bottomPaths;
-        return paths[i][j];
+        // check if we have visited [i,j] before
+        if (dp[i][j] != -1){
+            return dp[i][j];
+        }
+        let count = 0;
+        // move down
+        count += travel(i+1, j, n, m, dp);
+        // move right
+        count += travel(i, j+1, n,m, dp);
+        dp[i][j] = count;
+        return count;
     }
-    const paths = Array(n).fill(0).map(()=>Array(m).fill(-1));
-    dfs(0, 0, n, m, paths);
-    return paths[0][0];
+    const dp = Array(n).fill(0).map(()=>Array(m).fill(-1)); // initialized to -1
+    return travel(0,0,n,m,dp);
 };
