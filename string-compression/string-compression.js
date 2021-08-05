@@ -3,36 +3,34 @@
  * @return {number}
  */
 var compress = function(chars) {
-    // base case
-    if (chars.length <= 1){
-        return chars.length;
-    }
-    let placePivot = 0;
-    let count = 0;
+    // eg: [a a a b b c c c d]
+    // out:[a, 3, b, 2, c, 3, d]
+    // In Place!!! 
+    // index to record the cursor position
+    let index = 0;
+    let count = 1;
     for (let i = 0; i < chars.length; i++){
         const curr = chars[i];
-        const next = chars[i+1]; // at i == chars.length - 1, it is undefined
-        // if equal to prev
-        count++;
-        // if not equal to next, or last element
-        if(curr != next || i == chars.length-1){
-            // console.log("curr = " + curr)
-            // console.log("count = " + count)
-            // place prev
-            chars[placePivot] = curr;
-            placePivot++; // next position
-            if (count == 1){
-                count = 0; // new count
-                continue;
+        // if curr is the last char || curr != chars[i+1]
+        if (i == chars.length - 1 || curr != chars[i+1]){
+            chars[index] = curr; // replace with char
+            index += 1;
+            // if count > 1, replace with count
+            if (count > 1){
+                // count the length of the count
+                const countStr = count.toString();
+                const countLen = countStr.length;
+                for (let j = 0; j < countLen; j++){     
+                    chars[index] = countStr[j];
+                    index+=1;
+                }
             }
-            const countStr = count.toString();
-            for (const str of countStr){
-                chars[placePivot] = str;
-                placePivot++; 
-            }
-            count = 0;    
+            count = 1;
+        }else{
+            // curr == chars[i+1]
+            count += 1;
         }
     }
-    // include last
-    return placePivot;
+    // output the length of the array
+    return index;
 };
