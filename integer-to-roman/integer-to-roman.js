@@ -3,38 +3,37 @@
  * @return {string}
  */
 var intToRoman = function(num) {
-    // convert Interger to roman
-    // create lookup list for int to roman
-    const map = {
-        1000 :"M",
-        900 :"CM",  
-        500 :"D",
-        400 :"CD", 
-        100 :"C",
-        90 :"XC",
-        50 :"L",
-        40 :"XL",
-        10 :"X",
-        9 :"IX",
-        5 :"V",
-        4 :"IV",
-        1 :"I",  
+    // build lookup table
+    
+    // build value
+    const lookUp = [1, 4, 5, 9, 10, 40, 50, 90, 100, 400, 500, 900, 1000];
+    const loopUpTable = {
+        1: 'I',
+        4: 'IV',
+        5: 'V',
+        9: 'IX',
+        10: 'X',
+        40: 'XL',
+        50: 'L',
+        90: 'XC',
+        100: 'C',
+        400: 'CD',
+        500:'D',
+        900: 'CM',
+        1000: 'M'
     }
-    const lookup = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1];
-    let i = 0;
-    const result = []
-    // just divide by the first occurrence 
-    while (num != 0){
-        // check the first one to divide
-        while (num < lookup[i]){
-            i++;
+    // start from the largest
+    let lookUpIndex = lookUp.length-1;
+    const result = [];
+    while(num != 0){
+        // find the right lookup value
+        while (lookUp[lookUpIndex] > num){
+            lookUpIndex-=1;
         }
-        const times =  Math.floor(num / lookup[i])
-        num %= lookup[i];
-        for(let j = 0; j<times; j++){
-            result.push(map[lookup[i]]);
-        }
-    }  
-    // console.log(result)
+        const lookUpNum = lookUp[lookUpIndex];
+        const count = Math.floor(num / lookUpNum);
+        num = num % lookUpNum;
+        result.push(loopUpTable[lookUpNum].repeat(count));
+    }
     return result.join('');
 };
