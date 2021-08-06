@@ -4,70 +4,79 @@
  * @return {string[]}
  */
 var fullJustify = function(words, maxWidth) {
-    const lines = [];
-    const n = words.length;
-    let i = 0; 
-    let lineIndex = 0;
-    const lineLen = [];
     const result = [];
-    while (i < n){
-        // new line
-        const currLine = [];
-        let wordLen = 0;
-        while (i < n && wordLen + words[i].length <= maxWidth){
-            currLine.push(words[i]);
-            wordLen += (words[i].length + 1); // word + 1 space
-            i++;
-        }       
-        lines.push(currLine);
-        lineLen.push(wordLen - (currLine.length));
-    }
-    console.log(lines)
-    // calculate number of spaces 
-    for (let i = 0; i < lines.length - 1; i++){
-        const line = lines[i];
-        // console.log(line);
-        const currLineLen = lineLen[i]; 
-        const wordCount = line.length;
-        
-        const totalSpaceCount = maxWidth - currLineLen;
-        let numOfSpaces = Math.max(1, wordCount-1);
-        const minSpaceCount = Math.floor(totalSpaceCount / numOfSpaces);
-        let remainingSpaceCount = totalSpaceCount - minSpaceCount * numOfSpaces;
-        // console.log("currLineLen | totalSpaceCOunt | numOfSpace | minSPaceCOunt | remainingSpaces")
-        // console.log([currLineLen, totalSpaceCount, numOfSpaces, minSpaceCount, remainingSpaceCount]);
-              
-        const spaceCount = Array(numOfSpaces).fill(0);
-        const newLine = [];
-        for (let j = 0; j < wordCount; j++){
-            newLine.push(line[j]);
-            // console.log("pushing " + line[j])
-            // push minSpaces
-            if (numOfSpaces > 0){
-                numOfSpaces--;
-                for (let k = 0; k < minSpaceCount; k++){
-                    newLine.push(' ');
-                }
-            }
-            // push addition spaces
-            if (remainingSpaceCount > 0){
-                remainingSpaceCount--;
-                newLine.push(' ');
-            } 
+    const resultLines = [];
+    const lineWordLengths = [];
+    let line = [];
+    let lineIndex = 0;
+    let wordSumLen = 0;
+    resultLines.push(line);
+    for (let i = 0; i < words.length; i++){
+        const word = words[i];
+        // check if can put curr word in line, or it is not last 
+        // space  |  word Lenth
+        if ((line.length + wordSumLen + word.length) <= maxWidth){
+            // console.log("push to curr line word = " + word );
+            line.push(word);
+            wordSumLen += word.length;
+            lineWordLengths[lineIndex] = wordSumLen;
         }
-        const lineStr = newLine.join('');
-        // console.log(lineStr);
-        result.push(lineStr);
+        // else push to next line
+        else{
+            // console.log("push to next line: " + word);
+            line = [];// new line
+            lineIndex+=1;
+            resultLines.push(line);
+            line.push(word);
+            wordSumLen = word.length;
+            lineWordLengths[lineIndex] = wordSumLen;
+        }
     }
-    // add last line
-    const lastLine = lines[lines.length-1];
-    // add remaining space
-    const spaces = maxWidth - lineLen[lineLen.length-1] - (lastLine.length - 1);
-    const lineStr = lastLine.join(' ');
-    const spaceToken = [];
-    for (let i = 0; i < spaces; i++){
-        spaceToken.push(' ');
+    // console.log(resultLines);
+    // console.log(lineWordLengths);
+    // join the lines
+    for (let i = 0; i < resultLines.length - 1; i++){
+        const currLine = resultLines[i];
+        const wordLenSum = lineWordLengths[i];
+        // calculate the minSpaces and additional Space
+        const spaces = maxWidth - wordLenSum;
+        // if only one word, just add spaces to end
+        let colSpace, additionalSpaces;
+        if (currLine.length == 1){
+            colSpace = 0;
+            additionalSpaces = spaces;
+        }else{
+            // length > 1
+            colSpace = Math.floor(spaces / (currLine.length-1));
+            additionalSpaces = spaces % (currLine.length-1)
+        }
+        const lineArr = [];
+        // form a line
+        for (let j = 0; j < currLine.length; j++){
+            const word = currLine[j];
+            lineArr.push(word);
+            if (j != currLine.length-1) lineArr.push(' '.repeat(colSpace));
+            if (additionalSpaces != 0){
+                lineArr.push(' ');
+                additionalSpaces-=1;
+            }
+        }
+        if (additionalSpaces != 0){
+            lineArr.push(' '.repeat(additionalSpaces));
+        }
+        // console.log("line: " + currLine);
+        // console.log([colSpace, additionalSpaces]);
+        
+        result.push(lineArr.join(''));
     }
-    result.push(lineStr + spaceToken.join(''));
+    const lastLineWords = resultLines[resultLines.length-1];
+    // console.log(lastLineWords);
+    // process last line
+    const lastLine = lastLineWords.join(' ');
+    // // console.log(lastLine);
+    // console.log(lastLine.length);
+    // add spaces to the back
+    const backSpaceCount = maxWidth - lastLine.length;
+    result.push(lastLine + ' '.repeat(backSpaceCount));
     return result;
 };
