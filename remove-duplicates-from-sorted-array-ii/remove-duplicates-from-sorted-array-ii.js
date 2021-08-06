@@ -3,20 +3,28 @@
  * @return {number}
  */
 var removeDuplicates = function(nums) {
-    // use pivot to place unique
-    const n = nums.length;
-    if (n <= 2) return;
-    let pivot = 0;
+    // in place 
+    // 1 1 1 -> duplicates
+    // 1 1 -> not duplicates
     
-    for (let i = 0; i < n; i++){
-        // check if duplicated by checking pivot-1 and pivot-2, nums[0...pivot-1] are all non-duplicated
-        if (pivot >= 2 && nums[i] == nums[pivot-1] && nums[i] == nums[pivot-2]){
-            // duplicated
-        }else{
-            // not duplicated
-            nums[pivot] = nums[i];
-            pivot++;
+    // O(N)
+    // record the pivot points 
+    // record the prev number and prev prev number
+    if (nums.length <= 2) return nums.length;
+    let prev1 = nums[0],
+        prev2 = nums[1];
+    let pivot = 2;
+    for (let i = 2; i < nums.length; i++){
+        // check if the curr number is a duplicate
+        const curr = nums[i];
+        if (curr != prev1 || curr != prev2){
+            nums[pivot] = curr;
+            pivot += 1; 
         }
+        // updte prev1, prev2
+        prev1 = prev2;
+        prev2 = curr;
     }
+    // 1 2 3 4 _pivot_ -> pivot value = 4
     return pivot;
 };
