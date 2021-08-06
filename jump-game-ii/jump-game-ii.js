@@ -3,30 +3,36 @@
  * @return {number}
  */
 var jump = function(nums) {
-    const n = nums.length;
-    if (n == 1) return 0;
-    let currPos = 0;
-    let count = 0;
-    
-    // currPos
-    
-    // from [currPos to currPos + currJumpDist], find the next Pos which can jump furtheest
-    while (currPos < n-1){
-        // console.log("currpos = " + currPos)
-        const jumpDist = nums[currPos];
-        if (currPos + jumpDist >= n-1) return count + 1; // jump and reach end
-        let furthest = currPos;
-        let nextPos = currPos;
-        for (let i = currPos; i <= currPos + jumpDist; i++){
-            const jumpedPos = i + nums[i];
-            if (jumpedPos > furthest){
-                furthest = jumpedPos;
+    let jumpCount = 0;
+    let pos = 0;
+    // base case
+    if (nums.length == 1){
+        return jumpCount;
+    }
+    while (true){
+        // iterate over the whole jumping dist possible
+        console.log("we are at pos = " + pos);
+        const jumpDist = nums[pos];
+        let furthest = pos;
+        let nextPos = pos;
+        console.log("furthest for next pos = " + (pos + jumpDist))
+        // if last index is within jumping dist
+        if (pos + jumpDist >= nums.length - 1){
+            // we can reach the end
+            return jumpCount + 1;
+        }
+        for (let i = pos; i <= pos + jumpDist; i++){
+            if (i + nums[i] > furthest){
+                // update the furthest 
+                furthest = i + nums[i]; 
                 nextPos = i;
             }
         }
-        currPos = nextPos;
-        count++;
+        console.log("we will jump to next pos = " + nextPos);
+        console.log("furthest " + furthest);
+        jumpCount += 1;
+        pos = nextPos;
+        console.log("our jumping count = " + jumpCount);
     }
-    return count;
     
 };
