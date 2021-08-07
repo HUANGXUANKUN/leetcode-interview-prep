@@ -3,27 +3,21 @@
  * @return {number}
  */
 var lengthOfLongestSubstring = function(s) {
-    const indexMap = new Map();
+    let result = 0;
+    const map = new Map();
     let left = 0;
-    let maxLen = 0;
     for (let right = 0; right < s.length; right++){
         const curr = s[right];
-        // console.log(curr);
-        // check if existed
-        if (indexMap.has(curr)){
-            // existed, check if index position in within [left, right]
-            if (indexMap.get(curr) >= left){
-                // update left
-                left = indexMap.get(curr) + 1;
-            }
+        if (map.has(curr)){
+            // already exists, update left
+            const prevIndex = map.get(curr);
+            left = Math.max(left, prevIndex+1);
         }
-        indexMap.set(curr, right);
-        // console.log(indexMap);
-        // console.log("left = " + left + " right = " + right);
+        map.set(curr, right);
+        result = Math.max(result, right-left+1);
+        // console.log("at right = " + right, [left, right, result])
         
-        
-        // update maxLen
-        maxLen = Math.max(maxLen, right-left+1);
     }
-    return maxLen;
+    return result;
+    
 };
