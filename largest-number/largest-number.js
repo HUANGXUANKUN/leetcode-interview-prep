@@ -3,19 +3,17 @@
  * @return {string}
  */
 var largestNumber = function(nums) {
-    const numStr = nums.map(num => num.toString());
-    numStr.sort((a,b) => {
-        const combinedA = a+b;
-        const combinedB = b+a;
-        if (combinedA > combinedB){
-            return -1;
-        }
-        if (combinedA < combinedB){
-            return 1;
-        }
-        return 0;
+    // sort by values
+    nums.sort((a, b) => {
+        const sumA = parseInt('' + a+b);
+        const sumB = parseInt('' + b+a);
+        if (sumA > sumB) return -1;
+        else if (sumA < sumB) return 1;
+        return 0
     })
-    const joinedStr = numStr.join('');
-    if (joinedStr[0] == '0') return '0';
-    return joinedStr;
+    // console.log(nums);
+    const result = nums.join('');
+    if (result[0] == '0') return '0';
+    return result;
+    
 };
