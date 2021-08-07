@@ -4,24 +4,28 @@
  * @return {number}
  */
 var compareVersion = function(version1, version2) {
-    const tokenA = version1.split('.');
-    const tokenB = version2.split('.');
-    const maxN = Math.max(tokenA.length, tokenB.length);
-    for (let i = 0; i < maxN; i++){
-        let strA = '0', strB = '0';
-        if (i < tokenA.length) strA = tokenA[i];
-        if (i < tokenB.length) strB = tokenB[i];
-        // remove leading zero
-        // strA = strA.replace(/^0+/, '')
-        // strB = strB.replace(/^0+/, '')
-        // if (strA.length == 0) strA = '0'
-        // if (strB.length == 0) strB = '0'
-        // console.log([strA, strB])
-        // compare
-        if (parseInt(strA) < parseInt(strB)) return -1;
-        if (parseInt(strA) > parseInt(strB)) return 1;
-    }
-    // all equal
-    return 0;
+    // iterate both version1 and version2
+    // remove trailling zero for each values
+    const tokensA = version1.split('.');
+    const tokensB = version2.split('.');
     
+    for (let i = 0; i < Math.max(tokensA.length, tokensB.length); i++){
+        let valueA = 0,
+            valueB = 0;
+        if (i < tokensA.length){
+            const strA = tokensA[i].replace(/^0+/,'');
+            // console.log(tokensA[i], strA);
+            if (strA.length > 0) valueA = parseInt(strA);
+        }
+        if (i < tokensB.length){
+            const strB = tokensB[i].replace(/^0+/,'');
+            // console.log(tokensB[i], strB);
+            if (strB.length > 0) valueB = parseInt(strB);
+        }
+        // compare 
+        // console.log([valueA, valueB]);
+        if (valueA < valueB) return -1;
+        else if (valueA > valueB) return 1;
+    }
+    return 0;
 };
