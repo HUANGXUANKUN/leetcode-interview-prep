@@ -3,7 +3,7 @@
  */
 var RandomizedSet = function() {
     this.nums = [];
-    this.map = new Map(); // value: index  
+    this.map = {}; // value: index  
 };
 
 /**
@@ -12,9 +12,9 @@ var RandomizedSet = function() {
  * @return {boolean}
  */
 RandomizedSet.prototype.insert = function(val) {
-    if (!this.map.has(val)){
+    if (this.map[val] === undefined){ // not existed
         this.nums.push(val);
-        this.map.set(val, this.nums.length-1);
+        this.map[val] = this.nums.length-1;
         return true;
     }
     return false;    
@@ -26,13 +26,13 @@ RandomizedSet.prototype.insert = function(val) {
  * @return {boolean}
  */
 RandomizedSet.prototype.remove = function(val) {
-    if (!this.map.has(val)) return false; // does not contain val
-    const index = this.map.get(val);
+    if (this.map[val] === undefined) return false; // does not contain val
+    const index = this.map[val];
     // swap nums[indedx] with nums[last]
     this.nums[index] = this.nums[this.nums.length-1];
-    this.map.set(this.nums[index], index);
+    this.map[this.nums[index]] = index;
     this.nums.pop();
-    this.map.delete(val);
+    delete this.map[val];
     return true;
 };
 
