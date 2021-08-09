@@ -3,19 +3,14 @@
  * @param {number} k
  * @return {string}
  */
-var removeKdigits = function(nums, k) {
-    // remove k digit
-    // use stack
-    // compare stack[-1] with nums[i]
-    // if stack[-1] > nums[i], remove stack[-1]
-    // else push nums[i] to stack, i++
-    
-    let stack = [];
+var removeKdigits = function(num, k) {
+    // compare the top digit in stack with curr digit
+    if (k == 0) return num;
+    const stack = [];
     let i = 0;
-    while (i < nums.length){
-        const curr = Number(nums[i]);
-        if (stack.length > 0 && stack[stack.length-1] > curr && k > 0){
-            // remove
+    while (i < num.length){
+        const curr = num[i];
+        if(stack.length > 0 && stack[stack.length-1] > curr && k > 0){
             stack.pop();
             k--;
         }else{
@@ -23,18 +18,14 @@ var removeKdigits = function(nums, k) {
             i++;
         }
     }
-    // if k > 0
-    while (k > 0){
+    console.log(stack);  
+    console.log(k);
+    // if k > 0, pop
+    while(k > 0 && stack.length > 0){
         stack.pop();
         k--;
     }
-    // console.log(stack);
-    let rawStr = stack.join('');
-    // console.log(rawStr)
-    const regex = /^0+/g;
-    rawStr = rawStr.replace(regex, "");
-    console.log(rawStr)
-    if (rawStr == "") return "0";
-    return rawStr;
-    
+    let res = stack.join('').replace(/^0+/, '');
+    if (res.length == 0) return '0';
+    return res;
 };
