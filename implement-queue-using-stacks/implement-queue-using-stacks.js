@@ -2,9 +2,8 @@
  * Initialize your data structure here.
  */
 var MyQueue = function() {
-    this.stack1 = [];
-    this.stack2 = [];
-    
+    this.stackA = [];
+    this.stackB = [];
 };
 
 /**
@@ -13,7 +12,8 @@ var MyQueue = function() {
  * @return {void}
  */
 MyQueue.prototype.push = function(x) {
-    this.stack1.push(x);
+    this.stackA.push(x);
+    
 };
 
 /**
@@ -21,37 +21,28 @@ MyQueue.prototype.push = function(x) {
  * @return {number}
  */
 MyQueue.prototype.pop = function() {
-    if (this.empty()){
-        return null;
+    if(this.empty()) return;
+    if (this.stackB.length == 0){
+        // push all stackA to stackB
+        while(this.stackA.length > 0){
+            this.stackB.push(this.stackA.pop());
+        }
     }
-    // if there is element in stack2
-    if (this.stack2.length == 0){
-        // push all in stack1 to stack2
-        this.stackToQueue();
-    }
-    return this.stack2.pop();
+    return this.stackB.pop();
 };
-
-MyQueue.prototype.stackToQueue = function(){
-    while (this.stack1.length > 0){
-        this.stack2.push(this.stack1.pop());
-    }
-}
 
 /**
  * Get the front element.
  * @return {number}
  */
 MyQueue.prototype.peek = function() {
-    console.log("peaking")
-    
-    if (this.empty()) return null;
-    else if (this.stack2.length == 0){
-        this.stackToQueue();
+    if(this.empty()) return;
+    if(this.stackB.length > 0){
+        return this.stackB[this.stackB.length-1];
     }
-    console.log("stack1 = " + this.stack1)
-    console.log("stack2 = " + this.stack2)
-    return this.stack2[this.stack2.length-1];
+    // B is empty, top is stackA.first
+    return this.stackA[0];
+
 };
 
 /**
@@ -59,10 +50,8 @@ MyQueue.prototype.peek = function() {
  * @return {boolean}
  */
 MyQueue.prototype.empty = function() {
-    if (this.stack1.length > 0 || this.stack2.length > 0) {
-        return false;
-    }
-    return true;
+    if(this.stackA.length == 0 && this.stackB.length == 0) return true;
+    return false;
 };
 
 /** 
