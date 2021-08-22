@@ -11,24 +11,23 @@
  * @return {number}
  */
 var longestConsecutive = function(root) {
-    let maxLen = 0;
-    const dfs = (root, end, len) => {
-        if (root == null){
-            return;
-        }
-        // check if consecturive
-        if (len == 0 || (len > 0 && end + 1 == root.val)){
+    function dfs(node, parent, len){
+        if (node == null) return 0;
+        // check if parent
+        if (parent && node.val == parent.val + 1){
             len += 1;
-            end = root.val;
-            maxLen = Math.max(maxLen, len)
         }else{
             len = 1;
-            end = root.val;
         }
-        // console.log([root.val, len, end])
-        dfs(root.left, end, len);
-        dfs(root.right, end, len);
+        maxLen = Math.max(maxLen, len);
+        // left and right
+        dfs(node.left, node, len);
+        dfs(node.right, node, len);
     }
-    dfs(root, 0,0);
+    const dp = new Map();
+    let maxLen = 0;
+    dfs(root, null, 0);
     return maxLen;
+    
+    
 };
