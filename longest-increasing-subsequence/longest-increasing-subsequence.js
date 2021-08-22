@@ -3,19 +3,19 @@
  * @return {number}
  */
 var lengthOfLIS = function(nums) {
-    // dp[i] = longest subsquence ending at i
     const n = nums.length;
-    const dp = Array(n).fill(1);
+    const dp = Array(n).fill(0); // dp[j] = maxLen in nums[0...j]
     let maxLen = 0;
-    // if i > j, dp[i] = dp[j]+1 for all j < i
-    for (let i = 0; i < n; i++){
-        for (let j = 0; j <i;j++){
-            if (nums[i] > nums[j]){
-                dp[i] = Math.max(dp[i], dp[j] + 1);
+    for (let i = 0; i < nums.length; i++){
+        let len = 1;
+        for (let j = 0; j < i; j++){
+            if(nums[j] < nums[i]){
+                len = Math.max(len, dp[j] + 1);
             }
         }
-        maxLen = Math.max(maxLen, dp[i])
+        dp[i] = len;
+        maxLen = Math.max(maxLen, dp[i]);
     }
-    // console.log(dp);
     return maxLen;
+    
 };
