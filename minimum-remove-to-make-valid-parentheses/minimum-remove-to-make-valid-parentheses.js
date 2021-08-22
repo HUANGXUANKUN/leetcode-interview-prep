@@ -3,34 +3,25 @@
  * @return {string}
  */
 var minRemoveToMakeValid = function(s) {
-    // push tuple of ['(', index] into stack
-    // remove valid pair of ()
-    // for all remaining in stack, marked as removed
-    const stack = [];
-    for (let i = 0; i < s.length; i++){
-        const char = s[i];
-        if (char == '('){
-            // push to stack
-            stack.push([char, i]);
-        }else if (char == ')'){
-            // check if valid
-            if (stack.length > 0 && stack[stack.length-1][0] == '('){
-                // valid )
-                stack.pop();
+    const open = [];
+    const res = s.split('');
+    for(let i = 0; i < res.length; i++){
+        const curr = res[i];
+        if(curr == '('){
+            open.push(i);
+        }else if (curr == ')'){
+            if(open.length > 0){
+                open.pop();
             }else{
-                stack.push([char, i]); // invalid 
+                res[i] = ''; // not included
+                continue;
             }
         }
-        // console.log("at i = " + i + " stack = " + stack)
     }
-    const removeIndex = stack.map(([char, index])=>index);
-    // console.log(removeIndex);
-    const removeSet = new Set(removeIndex);
-    const result = [];
-    for (let i = 0; i < s.length; i++){
-        if (removeSet.has(i)) continue;
-        result.push(s[i]);
+    // remove remaining extra opening 
+    for (let i = 0; i < open.length; i++){
+        res[open[i]] = '';
     }
-    return result.join('');
+    return res.join('');
     
 };
