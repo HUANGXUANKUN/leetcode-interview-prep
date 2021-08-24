@@ -3,14 +3,16 @@
  * @return {number}
  */
 var maxProfit = function(prices) {
-    // sum all the increasing trend
-    let sum = 0;
-    for (let i = 0; i < prices.length-1; i++){
-        // check if [i, i+1] is increasing trend
-        if (prices[i+1] > prices[i]){
-            sum+=prices[i+1] - prices[i]
+    // only buy if the next day prices is higher
+    // sell immediate the nextday
+    let res = 0;
+    for (let i = 0; i < prices.length - 1; i++){
+        const curr = prices[i];
+        const next = prices[i+1];
+        if (curr < next){
+            // buy today, sell tmr
+            res += next - curr;
         }
     }
-    return sum;
-    
+    return res;
 };
