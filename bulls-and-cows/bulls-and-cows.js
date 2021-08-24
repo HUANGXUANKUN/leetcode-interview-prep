@@ -4,33 +4,35 @@
  * @return {string}
  */
 var getHint = function(secret, guess) {
-    // eg 1801
-    // create map = {'1':Set(0, 3)}
-    // add all number in secret to set
-    const tokens = secret.split('');
-    const numberCount = new Map();
-    for (const char of tokens){
-        numberCount.set(char, (numberCount.get(char) || 0) + 1);
+    // only digit
+    // to find A, iterate to find common digit with same index
+    // add common digit with same index in commonArr
+    // count digit of A in digitA
+    // count digit of B in digitB
+    
+    // for each digit, B += min(digitA[digit], digitB[digit]) - commonArr[digit]
+    
+    let n = secret.length;
+    const digitCommon = Array(10).fill(0);
+    const digitA = Array(10).fill(0);
+    const digitB = Array(10).fill(0);
+    for(let i = 0; i < n; i++){
+        const a = secret[i],
+              b = guess[i];
+        if (a == b) digitCommon[+a] += 1;
+        digitA[+a] += 1;
+        digitB[+b] += 1;
     }
-
-    let A = 0, B = 0;
-    for (let i = 0; i < secret.length; i++){
-        const numA = secret[i];
-        const numB = guess[i];
-        // console.log([numA, numB])
-        // console.log(numberCount);
-        if (numA == numB){
-            numberCount.set(numA, numberCount.get(numA)-1);
-            A++;
-            // if numberCount[numA] < 0, reduce B
-            if (numberCount.get(numA) < 0){
-                B--;
-            }
-        }
-        else if (numberCount.get(numB) > 0){
-            numberCount.set(numB, numberCount.get(numB)-1);
-            B++;
-        }
+    // console.log(digitCommon);
+    // console.log(digitA);
+    // console.log(digitB);
+    
+    let bulls = 0;
+    let cows = 0;
+    // iterate digit
+    for (let i = 0; i <= 9; i++){
+        bulls += digitCommon[i];
+        cows += Math.min(digitA[i], digitB[i]) - digitCommon[i];
     }
-    return A + 'A' + B + 'B'
+    return bulls + 'A' + cows + 'B';
 };
