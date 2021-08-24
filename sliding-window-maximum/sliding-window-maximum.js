@@ -4,29 +4,26 @@
  * @return {number[]}
  */
 var maxSlidingWindow = function(nums, k) {
-    const n = nums.length;
+    // use a queue to record curr window max position
+    // queue[0] is max
+    // if queue[0] < left, pop queue[0]
     const maxQueue = [];
     const res = [];
-    
-    for(let right = 0; right < n; right++){
-        const curr = nums[right];
-        while(maxQueue.length > 0 && curr > nums[maxQueue[maxQueue.length-1]]){
+    for(let i = 0; i < nums.length; i++){
+        const curr = nums[i];
+        while(maxQueue.length > 0 && nums[maxQueue[maxQueue.length-1]] < curr){
+            // pop if last element < curr
             maxQueue.pop();
         }
-        // maxQueue only contains value >= curr
-        // pop
-        maxQueue.push(right);
-        
-        // [1 2 3 4]
-        if(maxQueue[0] <= right - k){ // right = 3, k = 2, idx to be delete = >3-2
+        maxQueue.push(i);
+        // check if need pop
+        if(i >= k && maxQueue[0] <= i - k){ // eg i = 3, k =3, i-k = 0
             maxQueue.shift();
         }
-        
-        if(right >= k-1){
-            res.push(nums[maxQueue[0]]); // the max is at maxQueue[0]
+        // console.log("i = " + i, maxQueue)
+        if(i >= k-1){
+            res.push(nums[maxQueue[0]]);
         }
-        // console.log(maxQueue)
     }
     return res;
-    
 };
