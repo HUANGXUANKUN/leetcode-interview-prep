@@ -4,36 +4,55 @@
  * @return {number[][]}
  */
 var insert = function(intervals, newInterval) {
-    const result = [];
-    // push intervals[i] where end < newInterval.start
-    let i = 0;
-    while (i < intervals.length && intervals[i][1] < newInterval[0]){
-        result.push(intervals[i]);
-        i++;
-    }
-    
-    // intervals[i].end >= old.start
-    // merge remaining intervals
-    let oldStart = newInterval[0],
-        oldEnd = newInterval[1];
-    
-    // 
-    for (; i < intervals.length; i++){
-        const newStart = intervals[i][0],
-              newEnd = intervals[i][1];
-        
-        // check if merge
-        if (oldEnd < newStart){
-            // not merge
-            result.push([oldStart, oldEnd]);
-            oldStart = newStart;
-            oldEnd = newEnd;
+    // find the insertion index where newInterval.start > oldIntervals.end
+    const newStart = newInterval[0];
+    const newEnd = newInterval[1];
+    let insertIdx = 0;
+    const res = [];
+    for (let i = 0; i < intervals.length; i++){
+        const oldStart = intervals[i][0];
+        const oldEnd = intervals[i][1];
+        insertIdx = i;
+        if (newStart <= oldEnd){
+            // insert from i + 1
+            break;
         }else{
-            // merge
-            oldStart = Math.min(oldStart, newStart);
-            oldEnd = Math.max(oldEnd, newEnd);
+            // newStart >= oldEnd
+            res.push([oldStart, oldEnd]);
+            if (i == intervals.length - 1){
+                insertIdx = i+1; // insert at last
+            }
         }
     }
-    result.push([oldStart, oldEnd]);
-    return result;
+    if (insertIdx == intervals.length){
+        res.push([newStart, newEnd]);
+        return res;
+    }
+    // console.log(res)
+    // console.log(insertIdx)
+    let currStart = newStart;
+    let currEnd = newEnd;
+    let i = insertIdx;
+    while (i < intervals.length){
+        const oldStart = intervals[i][0];
+        const oldEnd = intervals[i][1];
+        // check if merge
+        if(!(oldStart > currEnd)){
+            // console.log("merge at i = ", i)
+            // console.log([currStart, currEnd, oldStart, oldEnd])
+            // merge
+            currStart = Math.min(currStart, oldStart);
+            currEnd = Math.max(currEnd, oldEnd);
+        }else{
+            // split, currStart > oldEnd
+            // console.log("pushing ", [currStart, currEnd])
+            res.push([currStart, currEnd]);
+            currStart = oldStart;
+            currEnd = oldEnd;
+        }
+        i++;
+    }
+    // push last group
+    res.push([currStart, currEnd]);
+    return res;
 };
