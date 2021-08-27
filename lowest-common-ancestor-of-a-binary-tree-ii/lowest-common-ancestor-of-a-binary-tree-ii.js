@@ -12,34 +12,26 @@
  * @return {TreeNode}
  */
 var lowestCommonAncestor = function(root, p, q) {
-    let pFound = false,
-        qFound = false;
+    let foundCount = 0;
     const dfs = (root, p, q) => {
         if (root == null) return null;
-        // check root val
-        // console.log(root.val)
-        if (root == p){
-            // console.log("p found")
-            pFound = true;
-        } 
-        if (root == q){
-            // console.log("q found")
-            qFound = true;
+        
+        // check curr value
+        let found = false;
+        if (root == p || root == q){
+            foundCount += 1;
+            found = true;
         }
-        const leftFound = dfs(root.left, p, q);
-        const rightFound = dfs(root.right, p, q);
-        if (root == p || root == q){ // itSelf can be LCA
-            return root;
+        const leftRes = dfs (root.left, p, q);
+        const rightRes = dfs (root.right, p, q);
+        if(leftRes && rightRes) {
+            return root; // common
         }
-        if (leftFound && rightFound){ // LCA
-            return (root);
-        }
-        if (leftFound || rightFound){ // LCA is in subtree
-            return leftFound || rightFound;
-        }
+        else if (found && (leftRes || rightRes)) return root; // root is res
+        else if (found) return root;
+        return leftRes || rightRes;
     }
-    const result = dfs (root, p, q);
-    if (pFound && qFound) return result;
+    const res = dfs(root, p, q);
+    if(foundCount == 2) return res;
     return null;
-    
 };
