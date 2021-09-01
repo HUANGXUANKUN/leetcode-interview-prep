@@ -4,28 +4,22 @@
  * @return {number}
  */
 var compareVersion = function(version1, version2) {
-    const tokensA = version1.split('.');
-    const tokensB = version2.split('.');
-    let n = tokensA.length,
-        m = tokensB.length;
-    let i = 0, j = 0;
-    while(i < n || j < m){
-        let valA = 0,
-            valB = 0;
-        if(i < n){
-            valA = parseInt(tokensA[i]);
-            i++;
-        }
-        if (j < m){
-            valB = parseInt(tokensB[j]);
-            j++;
-        }
-        if (valA == valB) continue;
-        if (valA < valB){
-            return -1;
-        }else{
-            return 1;
-        }
+    // split by .
+    const token1 = version1.split('.');
+    const token2 = version2.split('.');
+    const n = token1.length,
+          m = token2.length;
+    let i = 0;
+    while(i< n || i < m){
+        let value1 = 0,
+            value2 = 0;
+        if(i < n) value1 = parseInt(token1[i]);
+        if(i < m) value2 = parseInt(token2[i]);
+        // console.log([value1, value2]);
+        // compare
+        if(value1 < value2) return -1;
+        else if (value1 > value2) return 1;
+        i++;
     }
     return 0;
 };
